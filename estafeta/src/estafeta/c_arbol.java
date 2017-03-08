@@ -11,7 +11,7 @@ public class c_arbol {
    
     private c_nodo a_Raiz=null;
     
-    public void m_Insertar(int p_Llave, int p_Direccion){
+    public void m_Insertar(int p_Llave, long p_Direccion){
         c_nodo v_Nuevo;
         c_nodo v_Anterior = null;
         c_nodo v_Recorrido;
@@ -56,10 +56,10 @@ public class c_arbol {
                 }
             }
             if(v_Anterior.m_getLlave()==p_Llave){
-                System.out.println("El valor se encuentra en el arbol: "+v_Anterior.m_getDireccion());
+                //System.out.println("El valor se encuentra en el arbol: "+v_Anterior.m_getDireccion());
                 v_Direccion=v_Anterior.m_getDireccion();
             }else{
-                System.out.println("La llave ["+p_Llave+"] no se encuentra en el arbo");
+                System.out.println("La llave ["+p_Llave+"] no se encuentra en el arbol");
             }
         }
         return v_Direccion;

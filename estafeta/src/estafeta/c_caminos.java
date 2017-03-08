@@ -12,9 +12,10 @@ import java.util.Scanner;
 public class c_caminos {
     
     private int a_Llave;
-    private int a_cpOrigen;
-    private int a_cpDestino;
+    private String a_cdOrigen;
+    private String a_cdDestino;
     private float a_Distancia;
+    private c_arbol a_Arbol;
     
     /**
      * @name: c_caminos
@@ -35,13 +36,13 @@ public class c_caminos {
         do{
             try{
                 v_Entrada=new Scanner(System.in);
-                System.out.println("\n\tMenu\n");
-                System.out.println("[1] Agrega camino");
-                System.out.println("[2] Muestra caminos");
-                System.out.println("[3] Busca camino");
-                System.out.println("[4] Modifica camino");
+                System.out.println("\n\tMenú\n");
+                System.out.println("[1] Agrega ruta");
+                System.out.println("[2] Muestra ruta");
+                System.out.println("[3] Busca ruta");
+                System.out.println("[4] Modifica ruta");
                 System.out.println("[5] Salir");
-                System.out.print("Opcion: ");
+                System.out.print("Opción: ");
                 v_Opcion=v_Entrada.nextInt();
                 if(v_Opcion>0&&v_Opcion<6)
                     m_Opcion(v_Opcion);
@@ -66,10 +67,12 @@ public class c_caminos {
                 break;
             }
             case 2:{
+                m_Arbol();
                 m_leeSecuencial();
                 break;
             }
             case 3:{
+                m_Arbol();
                 m_leeAleatorio();
                 break;
             }
@@ -90,6 +93,8 @@ public class c_caminos {
         Scanner v_Entrada;
         long v_indDireccion;
         String v_Opcion="";
+        StringBuffer v_bfOrigen = null;
+        StringBuffer v_bfDestino = null;
         try{
             v_Maestro = new RandomAccessFile("src/files/maestro.dat","rw");
             v_Indice = new RandomAccessFile("src/files/indice.dat","rw");
@@ -99,7 +104,7 @@ public class c_caminos {
         if(v_Maestro!=null&&v_Indice!=null){
             do{ 
                 try{
-                    v_Opcion="";
+                    v_Opcion="1";
                     v_Entrada = new Scanner(System.in);
                     v_Maestro.seek(v_Maestro.length());
                     v_Indice.seek(v_Indice.length());
@@ -108,15 +113,19 @@ public class c_caminos {
                     System.out.print("\nLlave: ");
                     a_Llave=v_Entrada.nextInt();
                     System.out.print("Sucursal de Origen: ");
-                    a_cpOrigen=v_Entrada.nextInt();
+                    a_cdOrigen=v_Entrada.next();
+                    v_bfOrigen=new StringBuffer(a_cdOrigen);
+                    v_bfOrigen.setLength(30);
                     System.out.print("Sucursal de Destino: ");
-                    a_cpDestino=v_Entrada.nextInt();
+                    a_cdDestino=v_Entrada.next();
+                    v_bfDestino=new StringBuffer(a_cdDestino);
+                    v_bfDestino.setLength(30);
                     System.out.print("Distancia: ");
                     a_Distancia=v_Entrada.nextFloat();
                     
                     v_Maestro.writeInt(a_Llave);
-                    v_Maestro.writeInt(a_cpOrigen);
-                    v_Maestro.writeInt(a_cpDestino);
+                    v_Maestro.writeChars(v_bfOrigen.toString());
+                    v_Maestro.writeChars(v_bfDestino.toString());
                     v_Maestro.writeFloat(a_Distancia);
                     
                     v_Indice.writeInt(a_Llave);
@@ -129,7 +138,7 @@ public class c_caminos {
                 }catch(Exception e){
                     System.out.println("Error: Valor no valido");
                 }
-            }while(v_Opcion=="1");
+            }while("1".equals(v_Opcion));
             try{
                 v_Maestro.close();
                 v_Indice.close();
@@ -146,23 +155,33 @@ public class c_caminos {
     private void m_leeSecuencial(){
         RandomAccessFile v_Maestro;
         long v_apActual,v_apFinal;
-        System.out.println("\tCaminos\n");
+        System.out.println("\n\tRutas\n");
         System.out.print("No.\t");
-        System.out.print("Origen\t");
-        System.out.print("Destino\t");
+        System.out.print("Origen\t\t");
+        System.out.print("Destino\t\t");
         System.out.println("Distancia");
         try{
             v_Maestro = new RandomAccessFile("src/files/maestro.dat","r");
             v_apActual=v_Maestro.getFilePointer();
             v_apFinal=v_Maestro.length();
+            char v_cdOrigen[]=new char[30],v_cdDestino[]=new char[30],v_Temporal;
             while(v_apActual!=v_apFinal){
                 System.out.print(v_Maestro.readInt()+"\t");
-                System.out.print(v_Maestro.readInt()+"\t");
-                System.out.print(v_Maestro.readInt()+"\t");
+                for (int i = 0; i < v_cdOrigen.length; i++) {
+                    v_Temporal = v_Maestro.readChar();
+                    v_cdOrigen[i]=v_Temporal;
+                }
+                a_cdOrigen= new String(v_cdOrigen);
+                System.out.print(a_cdOrigen+"\t");
+                for (int i = 0; i < v_cdDestino.length; i++) {
+                    v_Temporal = v_Maestro.readChar();
+                    v_cdDestino[i]=v_Temporal;
+                }
+                a_cdDestino= new String(v_cdDestino);
+                System.out.print(a_cdDestino+"\t");
                 System.out.print(v_Maestro.readFloat()+"\n");
                 v_apActual=v_Maestro.getFilePointer();
             }
-            System.out.println("");
             v_Maestro.close();
         }catch(Exception e){
             System.out.println("Error: No se pudo abrir el archivo");
@@ -171,8 +190,8 @@ public class c_caminos {
     
     private void m_leeAleatorio(){
         int v_Llave;
-        String v_Opcion="";
-        long v_tamRegistro=0,v_Desplazamiento=0;
+        String v_Opcion="1";
+        long v_Desplazamiento=0;
         RandomAccessFile v_Maestro = null;
         Scanner v_Entrada;
         try{
@@ -181,30 +200,33 @@ public class c_caminos {
             System.out.println("Error: No se pudo abrir el archivos maestro");
         }
         if(v_Maestro!=null){
-            try{
-                v_Maestro.readInt();
-                v_Maestro.readInt();
-                v_Maestro.readInt();
-                v_Maestro.readFloat();
-                v_tamRegistro=v_Maestro.getFilePointer(); //Regresa direccion del Puntero
-            }catch(Exception e){
-                System.out.println("Error: No se pudo abrir el archivos maestro");
-            }
             do{
+                v_Opcion="1";
                 try{
+                    char v_cdOrigen[]=new char[30],v_cdDestino[]=new char[30],v_Temporal;
                     v_Entrada=new Scanner(System.in);
-                    System.out.print("Ingrese el no. de camino: ");
+                    System.out.print("\nIngrese el no. de ruta: ");
                     v_Llave=v_Entrada.nextInt();
-                    v_Desplazamiento=(v_Llave-1)*v_tamRegistro;
+                    v_Desplazamiento=a_Arbol.m_Busca(v_Llave);
                     v_Maestro.seek(v_Desplazamiento);
                     System.out.print("\nNo.\t");
-                    System.out.print("Origen\t");
-                    System.out.print("Destino\t");
+                    System.out.print("Origen\t\t");
+                    System.out.print("Destino\t\t");
                     System.out.println("Distancia");
                     System.out.print(v_Maestro.readInt()+"\t");
-                    System.out.print(v_Maestro.readInt()+"\t");
-                    System.out.print(v_Maestro.readInt()+"\t");
-                    System.out.print(v_Maestro.readFloat()+"\n\n");
+                    for (int i = 0; i < v_cdOrigen.length; i++) {
+                        v_Temporal = v_Maestro.readChar();
+                        v_cdOrigen[i]=v_Temporal;
+                    }
+                    a_cdOrigen= new String(v_cdOrigen);
+                    System.out.print(a_cdOrigen+"\t");
+                    for (int i = 0; i < v_cdDestino.length; i++) {
+                        v_Temporal = v_Maestro.readChar();
+                        v_cdDestino[i]=v_Temporal;
+                    }
+                    a_cdDestino= new String(v_cdDestino);
+                    System.out.print(a_cdDestino+"\t");
+                    System.out.print(v_Maestro.readFloat()+"\n");
                     System.out.println("\n¿Desea buscar otro camino?");
                     System.out.println("[Si]=1\n[No]=Cualquier tecla");
                     System.out.print("Opcion: ");
@@ -212,14 +234,14 @@ public class c_caminos {
                 }catch(Exception e){
                     System.out.println("Error: Valor invalido");
                 }
-            }while(v_Opcion=="1");
+            }while("1".equals(v_Opcion));
         }
     }
     
     private void m_Modifica(){        
         int v_Llave;
-        char v_Opcion='1';
-        long v_tamRegistro=0,v_Desplazamiento=0;
+        String v_Opcion="1";
+        long v_Desplazamiento=0;
         RandomAccessFile v_Maestro = null;
         Scanner v_Entrada;
         try{
@@ -228,43 +250,61 @@ public class c_caminos {
             System.out.println("Error: No se pudo abrir el archivos maestro");
         }
         if(v_Maestro!=null){
-            try{
-                v_Maestro.readInt();
-                v_Maestro.readInt();
-                v_Maestro.readInt();
-                v_Maestro.readFloat();
-                v_tamRegistro=v_Maestro.getFilePointer(); //Regresa direccion del Puntero
-            }catch(Exception e){
-                System.out.println("Error: No se pudo abrir el archivos maestro");
-            }
             do{
+                v_Opcion="1";
                 try{
+                    StringBuffer v_bfOrigen = null;
+                    StringBuffer v_bfDestino = null;
                     v_Entrada=new Scanner(System.in);
                     System.out.print("Ingrese el no. de camino: ");
                     v_Llave=v_Entrada.nextInt();
-                    v_Desplazamiento=(v_Llave-1)*v_tamRegistro;
+                    v_Desplazamiento=a_Arbol.m_Busca(v_Llave);
                     v_Maestro.seek(v_Desplazamiento);
                     v_Maestro.readInt();
                     
                     System.out.print("Sucursal de Origen: ");
-                    a_cpOrigen=v_Entrada.nextInt();
+                    a_cdOrigen=v_Entrada.next();
+                    v_bfOrigen=new StringBuffer(a_cdOrigen);
+                    v_bfOrigen.setLength(30);
                     System.out.print("Sucursal de Destino: ");
-                    a_cpDestino=v_Entrada.nextInt();
+                    a_cdDestino=v_Entrada.next();
+                    v_bfDestino=new StringBuffer(a_cdDestino);
+                    v_bfDestino.setLength(30);
                     System.out.print("Distancia: ");
                     a_Distancia=v_Entrada.nextFloat();
                     
-                    v_Maestro.writeInt(a_cpOrigen);
-                    v_Maestro.writeInt(a_cpDestino);
+                    v_Maestro.writeChars(v_bfOrigen.toString());
+                    v_Maestro.writeChars(v_bfDestino.toString());
                     v_Maestro.writeFloat(a_Distancia);
                     
                     System.out.println("\n¿Desea modificar otro camino?");
                     System.out.println("[Si]=1\n[No]=Cualquier tecla");
                     System.out.print("Opcion: ");
-                    v_Opcion=v_Entrada.next().charAt(0);
+                    v_Opcion=v_Opcion=v_Entrada.next();
                 }catch(Exception e){
                     System.out.println("Error: Valor invalido");
                 }
-            }while(v_Opcion=='1');
+            }while("1".equals(v_Opcion));
         }
     }//Fin del Método
+    
+    private void m_Arbol(){
+        a_Arbol = new c_arbol();
+        RandomAccessFile v_Indice;
+        long v_apActual,v_apFinal;
+        try{
+            v_Indice = new RandomAccessFile("src/files/indice.dat","r");
+            v_apActual=v_Indice.getFilePointer();
+            v_apFinal=v_Indice.length();
+            while(v_apActual!=v_apFinal){
+                v_Indice.readInt();
+                v_Indice.readLong();
+                a_Arbol.m_Insertar(v_Indice.readInt(),v_Indice.readLong());
+                v_apActual=v_Indice.getFilePointer();
+            }
+            v_Indice.close();
+        }catch(Exception e){
+            System.out.println("Error: No se pudo abrir el archivo");
+        }
+    }
 }
