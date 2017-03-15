@@ -17,6 +17,7 @@ public class c_ruta {
     private float a_Distancia;
     private c_arbol a_Indice;
     private c_lista a_Lista;
+    private c_arbolT a_arbolT;
     
     /**
      * @name: c_caminos
@@ -370,6 +371,9 @@ public class c_ruta {
     
     private void m_busquedaAnchura(){
         m_grafoConexo();
+        a_arbolT=new c_arbolT(a_Lista.a_Raiz.m_getVertice());
+        a_arbolT.m_Inserta(a_Lista.a_Raiz.m_getVertice(),"Celaya");
+        a_arbolT.m_Inserta("Celaya","Juventino");
     }
     
     private void m_grafoConexo(){
