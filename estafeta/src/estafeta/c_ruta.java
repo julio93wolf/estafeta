@@ -16,12 +16,14 @@ public class c_ruta {
     private String a_cdDestino;
     private float a_Distancia;
     private c_arbol a_Indice;
+    private c_lista a_Lista;
     
     /**
      * @name: c_caminos
      * @description: Constructor de la clase c_grafo
      */
     c_ruta(){
+        m_busquedaAnchura();
         m_Menu();
     }// Fin del constructor
     
@@ -365,4 +367,46 @@ public class c_ruta {
             System.out.println("Error: No se pudo abrir el archivo");
         }
     }
+    
+    private void m_busquedaAnchura(){
+        m_grafoConexo();
+    }
+    
+    private void m_grafoConexo(){
+        String v_Anterior="";
+        a_Lista=new c_lista();
+        RandomAccessFile v_Maestro;
+        long v_apActual,v_apFinal;
+        try{
+            v_Maestro = new RandomAccessFile("src/files/maestro.dat","r");
+            v_apActual=v_Maestro.getFilePointer();
+            v_apFinal=v_Maestro.length();
+            char v_cdOrigen[]=new char[40],v_cdDestino[]=new char[40],v_Temporal;
+            while(v_apActual!=v_apFinal){
+                a_Llave=v_Maestro.readInt();
+                for (int i = 0; i < v_cdOrigen.length; i++) {
+                    v_Temporal = v_Maestro.readChar();
+                    v_cdOrigen[i]=v_Temporal;
+                }
+                a_cdOrigen= new String(v_cdOrigen);
+                
+                for (int i = 0; i < v_cdDestino.length; i++) {
+                    v_Temporal = v_Maestro.readChar();
+                    v_cdDestino[i]=v_Temporal;
+                }
+                a_cdDestino= new String(v_cdDestino);
+                a_Distancia=v_Maestro.readFloat();
+                if(a_Llave>0){
+                    if(!v_Anterior.equals(a_cdOrigen)){
+                        a_Lista.m_Insertar(a_cdOrigen);
+                        v_Anterior=a_cdOrigen;
+                    }
+                }
+                v_apActual=v_Maestro.getFilePointer();
+            }
+            v_Maestro.close();
+        }catch(Exception e){
+            System.out.println("\u001B[31mError: No se pudo abrir el archivo\u001B[30m");
+        }
+    } 
 }
