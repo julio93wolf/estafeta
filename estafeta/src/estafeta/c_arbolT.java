@@ -26,7 +26,6 @@ public class c_arbolT {
                 }
             }
         }
-        System.out.println("");
     }
     
     public boolean m_Busca(String p_Hijo){

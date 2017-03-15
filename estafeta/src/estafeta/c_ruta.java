@@ -25,7 +25,6 @@ public class c_ruta {
      * @description: Constructor de la clase c_grafo
      */
     c_ruta(){
-        m_busquedaAnchura();
         m_Menu();
     }// Fin del constructor
     
@@ -46,17 +45,18 @@ public class c_ruta {
                 System.out.println("\u001B[34m[3]\u001B[30m Busca ruta");
                 System.out.println("\u001B[34m[4]\u001B[30m Modifica ruta");
                 System.out.println("\u001B[34m[5]\u001B[30m Eliminar ruta");
-                System.out.println("\u001B[34m[6]\u001B[30m Salir");
+                System.out.println("\u001B[34m[6]\u001B[30m Busqueda en anchura");
+                System.out.println("\u001B[34m[7]\u001B[30m Salir");
                 System.out.print("Opción: ");
                 v_Opcion=v_Entrada.nextInt();
-                if(v_Opcion>0&&v_Opcion<7)
+                if(v_Opcion>0&&v_Opcion<8)
                     m_Opcion(v_Opcion);
                 else
                     System.out.println("\u001B[31mError: Valor fuera de rango\u001B[30m");
             }catch(Exception e){
                 System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
             }
-        }while(v_Opcion!=6);
+        }while(v_Opcion!=7);
     }// Fin del método m_Menu
     
     /**
@@ -86,6 +86,10 @@ public class c_ruta {
             }
             case 5:{
                 m_Elimina();
+                break;
+            }
+            case 6:{
+                m_busquedaAnchura();
                 break;
             }
         }
@@ -400,14 +404,17 @@ public class c_ruta {
                             a_arbolT.m_Inserta(X, Y);
                             a_colaS.m_Insertar(Y);
                             if(Y.equals(a_cdDestino)){
-                                v_Temporal=null;
-                                a_colaS=null;
+                                v_Temporal.m_Vacia();
+                                a_colaS.m_Vacia();
                             }
                         }
-                        v_Temporal.m_Siguiente();
+                        if(v_Temporal.m_getRaiz()!=null)
+                            v_Temporal.m_Siguiente();
                     }
-                    m_grafoConexo();
-                    a_colaS.m_EliminaPrimero();
+                    if(a_colaS.m_getRaiz()!=null){
+                        m_grafoConexo();
+                        a_colaS.m_EliminaPrimero();
+                    }
                 }while(a_colaS.m_getRaiz()!=null);
             }catch(Exception e){
                 System.out.println(e.toString());

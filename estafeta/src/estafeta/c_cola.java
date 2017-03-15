@@ -28,4 +28,8 @@ public class c_cola {
     public c_nodoL m_getRaiz(){
         return a_Raiz;
     }
+    
+    public void m_Vacia(){
+        a_Raiz=null;
+    }
 }
