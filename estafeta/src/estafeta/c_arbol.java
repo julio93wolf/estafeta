@@ -11,15 +11,15 @@ public class c_arbol {
    
     private c_nodo a_Raiz=null;
     
-    public void m_Insertar(int p_Llave, long p_Direccion){
+    public void m_Insertar(int p_Llave, long p_Direccion, long p_dirIndice){
         c_nodo v_Nuevo;
         c_nodo v_Anterior = null;
         c_nodo v_Recorrido;
         
         if(a_Raiz==null){
-            a_Raiz=new c_nodo(p_Llave, p_Direccion);
+            a_Raiz=new c_nodo(p_Llave, p_Direccion, p_dirIndice);
         }else{
-            v_Nuevo = new c_nodo(p_Llave, p_Direccion);
+            v_Nuevo = new c_nodo(p_Llave, p_Direccion, p_dirIndice);
             v_Recorrido = a_Raiz;
             while(v_Recorrido!=null){
                 v_Anterior = v_Recorrido;
@@ -37,31 +37,58 @@ public class c_arbol {
         }
     }
     
-    public long m_Busca(int p_Llave){
-        long v_Direccion=0;
+    public long m_buscaRuta(int p_Llave){
+        long v_Direccion=-1;
         c_nodo v_Recorrido;
         c_nodo v_Anterior;
         
         if(a_Raiz==null){
-            System.out.println("Arbol vacio");
+            System.out.println("No hay caminos");
         }else{
             v_Recorrido=a_Raiz;
             v_Anterior=a_Raiz;
             while(v_Anterior.m_getLlave()!=p_Llave && v_Recorrido!=null){
                 v_Anterior=v_Recorrido;
                 if(v_Recorrido.m_getLlave()>p_Llave){
-                    v_Recorrido.m_getIzquierdo();
+                    v_Recorrido=v_Recorrido.m_getIzquierdo();
                 }else{
-                    v_Recorrido.m_getDerecho();
+                    v_Recorrido=v_Recorrido.m_getDerecho();
                 }
             }
             if(v_Anterior.m_getLlave()==p_Llave){
-                //System.out.println("El valor se encuentra en el arbol: "+v_Anterior.m_getDireccion());
                 v_Direccion=v_Anterior.m_getDireccion();
             }else{
-                System.out.println("La llave ["+p_Llave+"] no se encuentra en el arbol");
+                System.out.println("El camino ["+p_Llave+"] no se encuentra en el arbol");
             }
         }
         return v_Direccion;
     }
+    
+    public long m_buscaDirIndice(int p_Llave){
+        long v_Direccion=-1;
+        c_nodo v_Recorrido;
+        c_nodo v_Anterior;
+        
+        if(a_Raiz==null){
+            System.out.println("No hay caminos");
+        }else{
+            v_Recorrido=a_Raiz;
+            v_Anterior=a_Raiz;
+            while(v_Anterior.m_getLlave()!=p_Llave && v_Recorrido!=null){
+                v_Anterior=v_Recorrido;
+                if(v_Recorrido.m_getLlave()>p_Llave){
+                    v_Recorrido=v_Recorrido.m_getIzquierdo();
+                }else{
+                    v_Recorrido=v_Recorrido.m_getDerecho();
+                }
+            }
+            if(v_Anterior.m_getLlave()==p_Llave){
+                v_Direccion=v_Anterior.m_getDirIndice();
+            }else{
+                System.out.println("El camino ["+p_Llave+"] no se encuentra en el arbol");
+            }
+        }
+        return v_Direccion;
+    }
+    
 }
