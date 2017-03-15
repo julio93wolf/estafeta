@@ -9,7 +9,7 @@ import java.util.Scanner;
  * @version 17.3.3
  * @author Valle Rodriguez Julio Cesar
  */
-public class c_caminos {
+public class c_ruta {
     
     private int a_Llave;
     private String a_cdOrigen;
@@ -21,11 +21,7 @@ public class c_caminos {
      * @name: c_caminos
      * @description: Constructor de la clase c_grafo
      */
-    c_caminos(){
-        String t = "s\ts";
-        String s = "sssssssssssssss";
-        System.out.println(t);
-        System.out.println(s);
+    c_ruta(){
         m_Menu();
     }// Fin del constructor
     
@@ -265,7 +261,7 @@ public class c_caminos {
         try{
             v_Maestro = new RandomAccessFile("src/files/maestro.dat","rw");
         }catch(Exception e){
-            System.out.println("Error: No se pudo abrir el archivos maestro");
+            System.out.println("\u001B[31mError: No se pudo abrir el archivos maestro\u001B[30m");
         }
         if(v_Maestro!=null){
             do{
@@ -295,12 +291,12 @@ public class c_caminos {
                         v_Maestro.writeChars(v_bfDestino.toString());
                         v_Maestro.writeFloat(a_Distancia);
                     }
-                    System.out.println("\n¿Desea modificar otra ruta?");
-                    System.out.println("[Si]=1\n[No]=Cualquier tecla");
+                    System.out.println("\n\u001B[31m¿Desea modificar otra ruta?\u001B[30m");
+                    System.out.println("\u001B[34m[Si]\u001B[30m=1\n\u001B[34m[No]\u001B[30m=Cualquier tecla");
                     System.out.print("Opcion: ");
                     v_Opcion=v_Opcion=v_Entrada.next();
                 }catch(Exception e){
-                    System.out.println("Error: Valor invalido");
+                    System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
                     System.out.println(e.toString());
                 }
             }while("1".equals(v_Opcion));
@@ -317,7 +313,7 @@ public class c_caminos {
             v_Maestro = new RandomAccessFile("src/files/maestro.dat","rw");
             v_Indice = new RandomAccessFile("src/files/indice.dat","rw");
         }catch(Exception e){
-            System.out.println("Error: No se pudo abrir el archivos maestro");
+            System.out.println("\u001B[31mError: No se pudo abrir el archivos maestro\u001B[30m");
         }
         if(v_Maestro!=null && v_Indice != null){
             do{
@@ -335,8 +331,8 @@ public class c_caminos {
                         v_Indice.seek(a_Indice.m_buscaDirIndice(v_Posicion));
                         v_Indice.writeInt(-1);
                     }
-                    System.out.println("\n¿Desea eliminar otra ruta?");
-                    System.out.println("[Si]=1\n[No]=Cualquier tecla");
+                    System.out.println("\n\u001B[31m¿Desea eliminar otra ruta?\u001B[30m");
+                    System.out.println("\u001B[34m[Si]\u001B[30m=1\n\u001B[34m[No]\u001B[30m=Cualquier tecla");
                     System.out.print("Opcion: ");
                     v_Opcion=v_Opcion=v_Entrada.next();
                 }catch(Exception e){

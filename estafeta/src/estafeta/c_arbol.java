@@ -58,7 +58,7 @@ public class c_arbol {
             if(v_Anterior.m_getLlave()==p_Llave){
                 v_Direccion=v_Anterior.m_getDireccion();
             }else{
-                System.out.println("El camino ["+p_Llave+"] no se encuentra en el arbol");
+                System.out.println("La ruta ["+p_Llave+"] no se encuentra en el arbol");
             }
         }
         return v_Direccion;
@@ -85,7 +85,7 @@ public class c_arbol {
             if(v_Anterior.m_getLlave()==p_Llave){
                 v_Direccion=v_Anterior.m_getDirIndice();
             }else{
-                System.out.println("El camino ["+p_Llave+"] no se encuentra en el arbol");
+                System.out.println("La ruta ["+p_Llave+"] no se encuentra en el arbol");
             }
         }
         return v_Direccion;

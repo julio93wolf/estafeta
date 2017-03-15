@@ -15,7 +15,7 @@ public class estafeta {
      * @param args 
      */
     public static void main(String[] args) {
-        c_caminos o_grafo = new c_caminos();
+        c_ruta o_grafo = new c_ruta();
     }// Fin del método principal
     
 }
