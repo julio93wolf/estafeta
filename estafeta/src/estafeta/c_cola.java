@@ -1,9 +1,8 @@
-
 package estafeta;
 
-public class c_lista {
+public class c_cola {
     
-    private c_nodoL a_Raiz=null;
+    private c_nodoL a_Raiz=null;    
     
     public void m_Insertar(String p_Vertice){
         if(a_Raiz==null){
@@ -18,7 +17,7 @@ public class c_lista {
         }
     }
     
-    public void m_Siguiente(){
+    public void m_EliminaPrimero(){
         a_Raiz=a_Raiz.m_getSiguiente();
     }
     

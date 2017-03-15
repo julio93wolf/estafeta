@@ -16,8 +16,9 @@ public class c_ruta {
     private String a_cdDestino;
     private float a_Distancia;
     private c_arbol a_Indice;
-    private c_lista a_Lista;
+    private c_lista a_ListaG;
     private c_arbolT a_arbolT;
+    private c_cola a_colaS;
     
     /**
      * @name: c_caminos
@@ -370,15 +371,53 @@ public class c_ruta {
     }
     
     private void m_busquedaAnchura(){
+        Scanner v_Entrada;
+        StringBuffer v_bfOrigen = null;
+        StringBuffer v_bfDestino = null;
         m_grafoConexo();
-        a_arbolT=new c_arbolT(a_Lista.a_Raiz.m_getVertice());
-        a_arbolT.m_Inserta(a_Lista.a_Raiz.m_getVertice(),"Celaya");
-        a_arbolT.m_Inserta("Celaya","Juventino");
+        if(a_ListaG!=null){
+            try{
+                v_Entrada=new Scanner(System.in);
+                System.out.print("Sucursal de Origen: ");
+                a_cdOrigen=v_Entrada.next();
+                v_bfOrigen=new StringBuffer(a_cdOrigen);
+                v_bfOrigen.setLength(40);
+                a_cdOrigen= new String(v_bfOrigen);
+                System.out.print("Sucursal de Destino: ");
+                a_cdDestino=v_Entrada.next();
+                v_bfDestino=new StringBuffer(a_cdDestino);
+                v_bfDestino.setLength(40);
+                a_cdDestino= new String(v_bfDestino);
+                a_arbolT=new c_arbolT(a_cdOrigen);
+                a_colaS=new c_cola();
+                a_colaS.m_Insertar(a_cdOrigen);
+                do{
+                    String X=a_colaS.m_getVertice();
+                    c_lista v_Temporal = a_ListaG;
+                    while(v_Temporal.m_getRaiz()!=null){
+                        String Y=v_Temporal.m_getVertice();                        
+                        if(m_buscaG(X,Y)&&a_arbolT.m_Busca(Y)){
+                            a_arbolT.m_Inserta(X, Y);
+                            a_colaS.m_Insertar(Y);
+                            if(Y.equals(a_cdDestino)){
+                                v_Temporal=null;
+                                a_colaS=null;
+                            }
+                        }
+                        v_Temporal.m_Siguiente();
+                    }
+                    m_grafoConexo();
+                    a_colaS.m_EliminaPrimero();
+                }while(a_colaS.m_getRaiz()!=null);
+            }catch(Exception e){
+                System.out.println(e.toString());
+            }
+        }
     }
     
     private void m_grafoConexo(){
         String v_Anterior="";
-        a_Lista=new c_lista();
+        a_ListaG=new c_lista();
         RandomAccessFile v_Maestro;
         long v_apActual,v_apFinal;
         try{
@@ -402,7 +441,7 @@ public class c_ruta {
                 a_Distancia=v_Maestro.readFloat();
                 if(a_Llave>0){
                     if(!v_Anterior.equals(a_cdOrigen)){
-                        a_Lista.m_Insertar(a_cdOrigen);
+                        a_ListaG.m_Insertar(a_cdOrigen);
                         v_Anterior=a_cdOrigen;
                     }
                 }
@@ -412,5 +451,41 @@ public class c_ruta {
         }catch(Exception e){
             System.out.println("\u001B[31mError: No se pudo abrir el archivo\u001B[30m");
         }
-    } 
+    }
+    
+    private boolean m_buscaG(String p_X,String p_Y){
+        boolean v_Bandera=false;
+        String v_Padre,v_Hijo;
+        RandomAccessFile v_Maestro;
+        long v_apActual,v_apFinal;
+        try{
+            v_Maestro = new RandomAccessFile("src/files/maestro.dat","r");
+            v_apActual=v_Maestro.getFilePointer();
+            v_apFinal=v_Maestro.length();
+            char v_cdOrigen[]=new char[40],v_cdDestino[]=new char[40],v_Temporal;
+            while(v_apActual!=v_apFinal){
+                v_Maestro.readInt();
+                for (int i = 0; i < v_cdOrigen.length; i++) {
+                    v_Temporal = v_Maestro.readChar();
+                    v_cdOrigen[i]=v_Temporal;
+                }
+                v_Padre= new String(v_cdOrigen);
+                for (int i = 0; i < v_cdDestino.length; i++) {
+                    v_Temporal = v_Maestro.readChar();
+                    v_cdDestino[i]=v_Temporal;
+                }
+                v_Hijo= new String(v_cdDestino);
+                v_Maestro.readFloat();
+                if(a_Llave>0){
+                    if(v_Padre.equals(p_X)&&v_Hijo.equals(p_Y))
+                        v_Bandera=true;
+                }
+                v_apActual=v_Maestro.getFilePointer();
+            }
+            v_Maestro.close();
+        }catch(Exception e){
+            System.out.println("\u001B[31mError: No se pudo abrir el archivo\u001B[30m");
+        }
+        return v_Bandera;
+    }   
 }
