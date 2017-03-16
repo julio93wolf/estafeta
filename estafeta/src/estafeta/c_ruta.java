@@ -19,6 +19,7 @@ public class c_ruta {
     private c_lista a_ListaG;
     private c_arbolT a_arbolT;
     private c_cola a_colaS;
+    private String [][] a_Grafo;
     
     /**
      * @name: c_caminos
@@ -386,24 +387,24 @@ public class c_ruta {
                 a_cdOrigen=v_Entrada.next();
                 v_bfOrigen=new StringBuffer(a_cdOrigen);
                 v_bfOrigen.setLength(40);
-                a_cdOrigen= new String(v_bfOrigen);
+                String v_Origen= new String(v_bfOrigen);
                 System.out.print("Sucursal de Destino: ");
                 a_cdDestino=v_Entrada.next();
                 v_bfDestino=new StringBuffer(a_cdDestino);
                 v_bfDestino.setLength(40);
-                a_cdDestino= new String(v_bfDestino);
-                a_arbolT=new c_arbolT(a_cdOrigen);
+                String v_Destino= new String(v_bfDestino);
+                a_arbolT=new c_arbolT(v_Origen);
                 a_colaS=new c_cola();
-                a_colaS.m_Insertar(a_cdOrigen);
+                a_colaS.m_Insertar(v_Origen);
                 do{
                     String X=a_colaS.m_getVertice();
                     c_lista v_Temporal = a_ListaG;
                     while(v_Temporal.m_getRaiz()!=null){
-                        String Y=v_Temporal.m_getVertice();                        
+                        String Y=v_Temporal.m_getVertice();  
                         if(m_buscaG(X,Y)&&a_arbolT.m_Busca(Y)){
                             a_arbolT.m_Inserta(X, Y);
                             a_colaS.m_Insertar(Y);
-                            if(Y.equals(a_cdDestino)){
+                            if(Y.equals(v_Destino)){
                                 v_Temporal.m_Vacia();
                                 a_colaS.m_Vacia();
                             }
@@ -420,6 +421,7 @@ public class c_ruta {
                 System.out.println(e.toString());
             }
         }
+        System.out.println("");
     }
     
     private void m_grafoConexo(){
@@ -432,6 +434,27 @@ public class c_ruta {
             v_apActual=v_Maestro.getFilePointer();
             v_apFinal=v_Maestro.length();
             char v_cdOrigen[]=new char[40],v_cdDestino[]=new char[40],v_Temporal;
+            int v_tamGrafo=0;
+            while(v_apActual!=v_apFinal){
+                a_Llave=v_Maestro.readInt();
+                for (int i = 0; i < v_cdOrigen.length; i++) {
+                    v_Temporal = v_Maestro.readChar();
+                    v_cdOrigen[i]=v_Temporal;
+                }
+                for (int i = 0; i < v_cdDestino.length; i++) {
+                    v_Temporal = v_Maestro.readChar();
+                    v_cdDestino[i]=v_Temporal;
+                }
+                v_Maestro.readFloat();
+                if(a_Llave>0){
+                    v_tamGrafo++;
+                }
+                v_apActual=v_Maestro.getFilePointer();
+            }
+            a_Grafo=new String[v_tamGrafo][2];
+            v_Maestro.seek(0);
+            v_tamGrafo=0;
+            v_apActual=v_Maestro.getFilePointer();
             while(v_apActual!=v_apFinal){
                 a_Llave=v_Maestro.readInt();
                 for (int i = 0; i < v_cdOrigen.length; i++) {
@@ -439,7 +462,6 @@ public class c_ruta {
                     v_cdOrigen[i]=v_Temporal;
                 }
                 a_cdOrigen= new String(v_cdOrigen);
-                
                 for (int i = 0; i < v_cdDestino.length; i++) {
                     v_Temporal = v_Maestro.readChar();
                     v_cdDestino[i]=v_Temporal;
@@ -451,6 +473,9 @@ public class c_ruta {
                         a_ListaG.m_Insertar(a_cdOrigen);
                         v_Anterior=a_cdOrigen;
                     }
+                    a_Grafo[v_tamGrafo][0]= a_cdOrigen;
+                    a_Grafo[v_tamGrafo][1]= a_cdDestino;
+                    v_tamGrafo++;
                 }
                 v_apActual=v_Maestro.getFilePointer();
             }
@@ -462,7 +487,14 @@ public class c_ruta {
     
     private boolean m_buscaG(String p_X,String p_Y){
         boolean v_Bandera=false;
-        String v_Padre,v_Hijo;
+        //String v_Padre,v_Hijo;
+        
+        for (int i = 0; i < a_Grafo.length; i++) {
+            if(a_Grafo[i][0].equals(p_X)&&a_Grafo[i][1].equals(p_Y))
+                v_Bandera=true;
+        }
+        
+        /*
         RandomAccessFile v_Maestro;
         long v_apActual,v_apFinal;
         try{
@@ -493,6 +525,7 @@ public class c_ruta {
         }catch(Exception e){
             System.out.println("\u001B[31mError: No se pudo abrir el archivo\u001B[30m");
         }
+        */
         return v_Bandera;
     }   
 }
