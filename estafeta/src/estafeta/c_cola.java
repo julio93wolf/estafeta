@@ -2,14 +2,14 @@ package estafeta;
 
 public class c_cola {
     
-    private c_nodoL a_Raiz=null;    
+    private c_nodoC a_Raiz=null;    
     
-    public void m_Insertar(String p_Vertice){
+    public void m_Insertar(int p_Vertice){
         if(a_Raiz==null){
-            a_Raiz=new c_nodoL(p_Vertice);
+            a_Raiz=new c_nodoC(p_Vertice);
         }else{
-            c_nodoL v_Temporal = a_Raiz;
-            c_nodoL v_Nuevo = new c_nodoL(p_Vertice);
+            c_nodoC v_Temporal = a_Raiz;
+            c_nodoC v_Nuevo = new c_nodoC(p_Vertice);
             while(v_Temporal.m_getSiguiente()!=null){
                 v_Temporal=v_Temporal.m_getSiguiente();
             }
@@ -21,11 +21,11 @@ public class c_cola {
         a_Raiz=a_Raiz.m_getSiguiente();
     }
     
-    public String m_getVertice (){
+    public int m_getVertice (){
         return a_Raiz.m_getVertice();
     }
     
-    public c_nodoL m_getRaiz(){
+    public c_nodoC m_getRaiz(){
         return a_Raiz;
     }
     

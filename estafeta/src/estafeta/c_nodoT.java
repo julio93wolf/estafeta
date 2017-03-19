@@ -1,30 +1,28 @@
 package estafeta;
 public class c_nodoT {
     
-    private String a_Vertice;
+    private int a_Vertice;
     private int a_noHijos;
     private c_nodoT a_Hijos[];
-    private c_nodoT a_HijosT[];
+    //private c_nodoT a_HijosT[];
 
-    public c_nodoT(String p_Vector) {
+    public c_nodoT(int p_Vector) {
         a_Vertice=p_Vector;
     }
     
-    private void m_copiaVertices(){
-        a_HijosT=new c_nodoT[a_noHijos+1];
+    public void m_insertaVertice(c_nodoT p_Vector){
+        c_nodoT v_HijosT[];
+        v_HijosT=new c_nodoT[a_noHijos+1];
         for (int i = 0; i < a_noHijos; i++) {
-            a_HijosT[i]=a_Hijos[i];
+            v_HijosT[i]=a_Hijos[i];
         }
-    }
-    
-    public void m_aumentaVertices(c_nodoT p_Vector){
-        m_copiaVertices();
-        a_HijosT[a_noHijos]=p_Vector;
-        a_Hijos = a_HijosT;
+        //m_copiaVertices();
+        v_HijosT[a_noHijos]=p_Vector;
+        a_Hijos = v_HijosT;
         a_noHijos++;
     }
     
-    public String m_getVertice(){
+    public int m_getVertice(){
         return a_Vertice;
     }
     
