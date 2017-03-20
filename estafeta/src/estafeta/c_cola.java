@@ -4,7 +4,7 @@ public class c_cola {
     
     private c_nodoC a_Raiz=null;    
     
-    public void m_Insertar(int p_Vertice){
+    public void m_InsertarCola(int p_Vertice){
         if(a_Raiz==null){
             a_Raiz=new c_nodoC(p_Vertice);
         }else{
@@ -17,7 +17,7 @@ public class c_cola {
         }
     }
     
-    public void m_EliminaPrimero(){
+    public void m_EliminaCola(){
         a_Raiz=a_Raiz.m_getSiguiente();
     }
     
@@ -29,7 +29,7 @@ public class c_cola {
         return a_Raiz;
     }
     
-    public void m_Vacia(){
+    public void m_VaciaCola(){
         a_Raiz=null;
     }
 }

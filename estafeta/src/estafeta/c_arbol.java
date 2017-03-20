@@ -9,17 +9,17 @@ package estafeta;
  */
 public class c_arbol {
    
-    private c_nodo a_Raiz=null;
+    private c_nodoA a_Raiz=null;
     
-    public void m_Insertar(int p_Llave, long p_Direccion, long p_dirIndice){
-        c_nodo v_Nuevo;
-        c_nodo v_Anterior = null;
-        c_nodo v_Recorrido;
+    public void m_InsertarArbol(int p_Llave, long p_Direccion, long p_dirIndice){
+        c_nodoA v_Nuevo;
+        c_nodoA v_Anterior = null;
+        c_nodoA v_Recorrido;
         
         if(a_Raiz==null){
-            a_Raiz=new c_nodo(p_Llave, p_Direccion, p_dirIndice);
+            a_Raiz=new c_nodoA(p_Llave, p_Direccion, p_dirIndice);
         }else{
-            v_Nuevo = new c_nodo(p_Llave, p_Direccion, p_dirIndice);
+            v_Nuevo = new c_nodoA(p_Llave, p_Direccion, p_dirIndice);
             v_Recorrido = a_Raiz;
             while(v_Recorrido!=null){
                 v_Anterior = v_Recorrido;
@@ -39,8 +39,8 @@ public class c_arbol {
     
     public long m_buscaRuta(int p_Llave){
         long v_Direccion=-1;
-        c_nodo v_Recorrido;
-        c_nodo v_Anterior;
+        c_nodoA v_Recorrido;
+        c_nodoA v_Anterior;
         
         if(a_Raiz==null){
             System.out.println("No hay caminos");
@@ -66,8 +66,8 @@ public class c_arbol {
     
     public long m_buscaDirIndice(int p_Llave){
         long v_Direccion=-1;
-        c_nodo v_Recorrido;
-        c_nodo v_Anterior;
+        c_nodoA v_Recorrido;
+        c_nodoA v_Anterior;
         
         if(a_Raiz==null){
             System.out.println("No hay caminos");

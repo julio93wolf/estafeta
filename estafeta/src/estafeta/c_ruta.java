@@ -21,6 +21,7 @@ public class c_ruta {
     private int [] a_G=null;
     private c_arbolT a_arbolT;
     private c_cola a_colaS;
+    private c_pila a_pilaW;
     
     /**
      * @name: c_caminos
@@ -48,17 +49,18 @@ public class c_ruta {
                 System.out.println("\u001B[34m[4]\u001B[30m Modifica ruta");
                 System.out.println("\u001B[34m[5]\u001B[30m Eliminar ruta");
                 System.out.println("\u001B[34m[6]\u001B[30m Busqueda en anchura");
-                System.out.println("\u001B[34m[7]\u001B[30m Salir");
+                System.out.println("\u001B[34m[7]\u001B[30m Busqueda en profundidad");
+                System.out.println("\u001B[34m[8]\u001B[30m Salir");
                 System.out.print("Opción: ");
                 v_Opcion=v_Entrada.nextInt();
-                if(v_Opcion>0&&v_Opcion<8)
+                if(v_Opcion>0&&v_Opcion<9)
                     m_Opcion(v_Opcion);
                 else
                     System.out.println("\u001B[31mError: Valor fuera de rango\u001B[30m");
             }catch(Exception e){
                 System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
             }
-        }while(v_Opcion!=7);
+        }while(v_Opcion!=8);
     }// Fin del método m_Menu
     
     /**
@@ -92,6 +94,10 @@ public class c_ruta {
             }
             case 6:{
                 m_busquedaAnchura();
+                break;
+            }
+            case 7:{
+                m_busquedaProfundidad();
                 break;
             }
         }
@@ -210,7 +216,7 @@ public class c_ruta {
                 v_Llave=v_Indice.readInt();
                 v_Direccion=v_Indice.readLong();
                 if (v_Llave>0) {
-                    a_Indice.m_Insertar(v_Llave,v_Direccion,v_apActual);
+                    a_Indice.m_InsertarArbol(v_Llave,v_Direccion,v_apActual);
                 }
                 v_apActual=v_Indice.getFilePointer();
             }
@@ -363,8 +369,6 @@ public class c_ruta {
                 a_munOrigen=v_Entrada.nextInt();
                 System.out.print("Sucursal de Destino: ");
                 a_munDestino=v_Entrada.nextInt();
-                
-                
                 boolean v_bdOrigen=false;
                 boolean v_bdDestino=false;
                 for (int i = 0; i < a_G.length; i++) {
@@ -376,25 +380,25 @@ public class c_ruta {
                 if(v_bdOrigen&&v_bdDestino){
                     a_arbolT=new c_arbolT(a_munOrigen);
                     a_colaS=new c_cola();
-                    a_colaS.m_Insertar(a_munOrigen);
+                    a_colaS.m_InsertarCola(a_munOrigen);
                     if(a_munOrigen==a_munDestino){
-                        a_colaS.m_Vacia();
+                        a_colaS.m_VaciaCola();
                     }
                     do{
                         int X=a_colaS.m_getVertice();
                         for (int i = 0; i < a_G.length; i++) {
                             int Y=a_G[i];
-                            if(m_buscaGrafo(X,Y)&&a_arbolT.m_Busca(Y)){
-                                a_arbolT.m_Inserta(X, Y);
-                                a_colaS.m_Insertar(Y);
+                            if(m_buscaGrafo(X,Y)&&a_arbolT.m_BuscaArbol(Y)){
+                                a_arbolT.m_InsertaArbol(X, Y);
+                                a_colaS.m_InsertarCola(Y);
                                 if(Y==a_munDestino){
                                     i = a_G.length;
-                                    a_colaS.m_Vacia();
+                                    a_colaS.m_VaciaCola();
                                 }
                             }
                         }
                         if(a_colaS.m_getRaiz()!=null){
-                            a_colaS.m_EliminaPrimero();
+                            a_colaS.m_EliminaCola();
                         }
                     }while(a_colaS.m_getRaiz()!=null);
                 }else{
@@ -404,7 +408,64 @@ public class c_ruta {
                         System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
                 }
                 System.out.println("\n");
-                a_arbolT.m_Imprime();
+                a_arbolT.m_ImprimeArbol();
+            }catch(Exception e){
+                System.out.println(e.toString());
+            }
+        }
+    }
+    
+    private void m_busquedaProfundidad(){
+        Scanner v_Entrada;        
+        m_fillGrafo();
+        m_fillG();
+        if(a_G!=null){
+            try{
+                v_Entrada=new Scanner(System.in);
+                System.out.print("\nSucursal de Origen: ");
+                a_munOrigen=v_Entrada.nextInt();
+                System.out.print("Sucursal de Destino: ");
+                a_munDestino=v_Entrada.nextInt();
+                boolean v_bdOrigen=false;
+                boolean v_bdDestino=false;
+                for (int i = 0; i < a_G.length; i++) {
+                    if(a_G[i]==a_munOrigen)
+                        v_bdOrigen=true;
+                    if(a_G[i]==a_munDestino)
+                        v_bdDestino=true;
+                }
+                if(v_bdOrigen&&v_bdDestino){
+                    a_arbolT=new c_arbolT(a_munOrigen);
+                    a_pilaW=new c_pila();
+                    a_pilaW.m_InsertaPila(a_munOrigen);
+                    if(a_munOrigen!=a_munDestino){
+                        do{
+                            for (int i = 0; i < a_G.length; i++) {
+                                int X=a_pilaW.m_getVertice();
+                                int Y=a_G[i];
+                                if(m_buscaGrafo(X,Y)&&a_arbolT.m_BuscaArbol(Y)){
+                                    a_arbolT.m_InsertaArbol(X, Y);
+                                    a_pilaW.m_InsertaPila(Y);
+                                    i=-1;
+                                    if(Y==a_munDestino){
+                                        i = a_G.length;
+                                        a_pilaW.m_VaciaPila();
+                                    }
+                                }
+                            }
+                            if(a_pilaW.m_getRaiz()!=null){
+                                a_pilaW.m_SacaPila();
+                            }
+                        }while(a_pilaW.m_getRaiz()!=null);
+                    }
+                }else{
+                    if(!v_bdOrigen)
+                        System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
+                    if(!v_bdDestino)
+                        System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
+                }
+                System.out.println("\n");
+                a_arbolT.m_ImprimeArbol();
             }catch(Exception e){
                 System.out.println(e.toString());
             }
