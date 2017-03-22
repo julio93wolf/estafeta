@@ -401,14 +401,14 @@ public class c_ruta {
                             a_colaS.m_EliminaCola();
                         }
                     }while(a_colaS.m_getRaiz()!=null);
+                    System.out.println("\n");
+                    a_arbolT.m_ImprimeArbol();
                 }else{
                     if(!v_bdOrigen)
                         System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
                     if(!v_bdDestino)
                         System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
                 }
-                System.out.println("\n");
-                a_arbolT.m_ImprimeArbol();
             }catch(Exception e){
                 System.out.println(e.toString());
             }
@@ -458,14 +458,14 @@ public class c_ruta {
                             }
                         }while(a_pilaW.m_getRaiz()!=null);
                     }
+                    System.out.println("\n");
+                    a_arbolT.m_ImprimeArbol();
                 }else{
                     if(!v_bdOrigen)
                         System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
                     if(!v_bdDestino)
                         System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
                 }
-                System.out.println("\n");
-                a_arbolT.m_ImprimeArbol();
             }catch(Exception e){
                 System.out.println(e.toString());
             }
