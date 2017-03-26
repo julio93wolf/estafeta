@@ -3,7 +3,7 @@ package estafeta;
 public class c_pila {
     private c_nodoP a_Raiz=null;    
     
-    public void m_InsertaPila(int p_Vertice){
+    public void m_insertaPila(int p_Vertice){
         if(a_Raiz==null){
             a_Raiz=new c_nodoP(p_Vertice);
         }else{
@@ -14,7 +14,7 @@ public class c_pila {
         }
     }
     
-    public void m_SacaPila(){
+    public void m_sacaPila(){
         a_Raiz=a_Raiz.m_getSiguiente();
     }
     
@@ -26,7 +26,7 @@ public class c_pila {
         return a_Raiz;
     }
     
-    public void m_VaciaPila(){
+    public void m_vaciaPila(){
         a_Raiz=null;
     }
 }

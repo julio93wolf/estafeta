@@ -11,11 +11,11 @@ public class c_arbol {
    
     private c_nodoA a_Raiz=null;
     
-    public void m_InsertarArbol(int p_Llave, long p_Direccion, long p_dirIndice){
+    public void m_insertarArbol(int p_Llave, long p_Direccion, long p_dirIndice){
         c_nodoA v_Nuevo;
         c_nodoA v_Anterior = null;
         c_nodoA v_Recorrido;
-        
+          
         if(a_Raiz==null){
             a_Raiz=new c_nodoA(p_Llave, p_Direccion, p_dirIndice);
         }else{
@@ -37,7 +37,7 @@ public class c_arbol {
         }
     }
     
-    public long m_buscaRuta(int p_Llave){
+    public long m_buscaRegistro(int p_Llave){
         long v_Direccion=-1;
         c_nodoA v_Recorrido;
         c_nodoA v_Anterior;
@@ -64,7 +64,7 @@ public class c_arbol {
         return v_Direccion;
     }
     
-    public long m_buscaDirIndice(int p_Llave){
+    public long m_buscaRegIndice(int p_Llave){
         long v_Direccion=-1;
         c_nodoA v_Recorrido;
         c_nodoA v_Anterior;

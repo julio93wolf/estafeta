@@ -12,8 +12,8 @@ import java.util.Scanner;
 public class c_ruta {
     
     private int a_Llave;
-    private int a_munOrigen;
-    private int a_munDestino;
+    private int a_Origen;
+    private int a_Destino;
     private float a_Distancia;
     
     private c_arbol a_Indice;
@@ -132,17 +132,17 @@ public class c_ruta {
                     a_Llave=v_Entrada.nextInt();
                     
                     System.out.print("Sucursal de Origen: ");
-                    a_munOrigen=v_Entrada.nextInt();
+                    a_Origen=v_Entrada.nextInt();
                     
                     System.out.print("Sucursal de Destino: ");
-                    a_munDestino=v_Entrada.nextInt();
+                    a_Destino=v_Entrada.nextInt();
                     
                     System.out.print("Distancia: ");
                     a_Distancia=v_Entrada.nextFloat();
                     
                     v_Maestro.writeInt(a_Llave);
-                    v_Maestro.writeInt(a_munOrigen);
-                    v_Maestro.writeInt(a_munDestino);
+                    v_Maestro.writeInt(a_Origen);
+                    v_Maestro.writeInt(a_Destino);
                     v_Maestro.writeFloat(a_Distancia);
                     
                     v_Indice.writeInt(a_Llave);
@@ -185,14 +185,14 @@ public class c_ruta {
             while(v_apActual!=v_apFinal){
                 
                 a_Llave=v_Maestro.readInt();
-                a_munOrigen= v_Maestro.readInt();
-                a_munDestino= v_Maestro.readInt();
+                a_Origen= v_Maestro.readInt();
+                a_Destino= v_Maestro.readInt();
                 a_Distancia=v_Maestro.readFloat();
                 
                 if(a_Llave>0){
                     System.out.print("\u001B[31m"+a_Llave+"\u001B[30m\t");
-                    System.out.print("\u001B[34m"+a_munOrigen+"\u001B[30m\t");
-                    System.out.print("\u001B[34m"+a_munDestino+"\u001B[30m\t");
+                    System.out.print("\u001B[34m"+a_Origen+"\u001B[30m\t");
+                    System.out.print("\u001B[34m"+a_Destino+"\u001B[30m\t");
                     System.out.print(a_Distancia+"\n");
                 }
                 v_apActual=v_Maestro.getFilePointer();
@@ -216,7 +216,7 @@ public class c_ruta {
                 v_Llave=v_Indice.readInt();
                 v_Direccion=v_Indice.readLong();
                 if (v_Llave>0) {
-                    a_Indice.m_InsertarArbol(v_Llave,v_Direccion,v_apActual);
+                    a_Indice.m_insertarArbol(v_Llave,v_Direccion,v_apActual);
                 }
                 v_apActual=v_Indice.getFilePointer();
             }
@@ -244,7 +244,7 @@ public class c_ruta {
                     v_Entrada=new Scanner(System.in);
                     System.out.print("\nIngrese el no. de ruta: ");
                     v_Posicion=v_Entrada.nextInt();
-                    v_Desplazamiento=a_Indice.m_buscaRuta(v_Posicion);
+                    v_Desplazamiento=a_Indice.m_buscaRegistro(v_Posicion);
                     if(v_Desplazamiento>=0){
                         v_Maestro.seek(v_Desplazamiento);
                         System.out.print("\nNo.\t");
@@ -252,12 +252,12 @@ public class c_ruta {
                         System.out.print("Destino\t\t");
                         System.out.println("Distancia");
                         a_Llave=v_Maestro.readInt();
-                        a_munOrigen=v_Maestro.readInt();
-                        a_munDestino=v_Maestro.readInt();
+                        a_Origen=v_Maestro.readInt();
+                        a_Destino=v_Maestro.readInt();
                         a_Distancia=v_Maestro.readFloat();
                         System.out.print("\u001B[31m"+a_Llave+"\u001B[30m\t");
-                        System.out.print("\u001B[34m"+a_munOrigen+"\u001B[30m\t");
-                        System.out.print("\u001B[34m"+a_munDestino+"\u001B[30m\t");
+                        System.out.print("\u001B[34m"+a_Origen+"\u001B[30m\t");
+                        System.out.print("\u001B[34m"+a_Destino+"\u001B[30m\t");
                         System.out.print(a_Distancia+"\n");
                     }
                     System.out.println("\n\u001B[31m¿Desea buscar otra ruta?\u001B[30m");
@@ -290,22 +290,22 @@ public class c_ruta {
                     v_Entrada=new Scanner(System.in);
                     System.out.print("\nIngrese el no. de ruta: ");
                     v_Posicion=v_Entrada.nextInt();
-                    v_Desplazamiento=a_Indice.m_buscaRuta(v_Posicion);
+                    v_Desplazamiento=a_Indice.m_buscaRegistro(v_Posicion);
                     if(v_Desplazamiento>=0){
                         v_Maestro.seek(v_Desplazamiento);
                         v_Maestro.readInt();
                         
                         System.out.print("Sucursal de Origen: ");
-                        a_munOrigen=v_Entrada.nextInt();
+                        a_Origen=v_Entrada.nextInt();
                         
                         System.out.print("Sucursal de Destino: ");
-                        a_munDestino=v_Entrada.nextInt();
+                        a_Destino=v_Entrada.nextInt();
                         
                         System.out.print("Distancia: ");
                         a_Distancia=v_Entrada.nextFloat();
 
-                        v_Maestro.writeInt(a_munOrigen);
-                        v_Maestro.writeInt(a_munDestino);
+                        v_Maestro.writeInt(a_Origen);
+                        v_Maestro.writeInt(a_Destino);
                         v_Maestro.writeFloat(a_Distancia);
                     }
                     System.out.println("\n\u001B[31m¿Desea modificar otra ruta?\u001B[30m");
@@ -339,11 +339,11 @@ public class c_ruta {
                     v_Entrada=new Scanner(System.in);
                     System.out.print("Ingrese el no. de ruta: ");
                     v_Posicion=v_Entrada.nextInt();
-                    v_Desplazamiento=a_Indice.m_buscaRuta(v_Posicion);
+                    v_Desplazamiento=a_Indice.m_buscaRegistro(v_Posicion);
                     if(v_Desplazamiento>=0){
                         v_Maestro.seek(v_Desplazamiento);
                         v_Maestro.writeInt(-1);
-                        v_Indice.seek(a_Indice.m_buscaDirIndice(v_Posicion));
+                        v_Indice.seek(a_Indice.m_buscaRegIndice(v_Posicion));
                         v_Indice.writeInt(-1);
                     }
                     System.out.println("\n\u001B[31m¿Desea eliminar otra ruta?\u001B[30m");
@@ -366,43 +366,43 @@ public class c_ruta {
             try{
                 v_Entrada=new Scanner(System.in);
                 System.out.print("\nSucursal de Origen: ");
-                a_munOrigen=v_Entrada.nextInt();
+                a_Origen=v_Entrada.nextInt();
                 System.out.print("Sucursal de Destino: ");
-                a_munDestino=v_Entrada.nextInt();
+                a_Destino=v_Entrada.nextInt();
                 boolean v_bdOrigen=false;
                 boolean v_bdDestino=false;
                 for (int i = 0; i < a_G.length; i++) {
-                    if(a_G[i]==a_munOrigen)
+                    if(a_G[i]==a_Origen)
                         v_bdOrigen=true;
-                    if(a_G[i]==a_munDestino)
+                    if(a_G[i]==a_Destino)
                         v_bdDestino=true;
                 }
                 if(v_bdOrigen&&v_bdDestino){
-                    a_arbolT=new c_arbolT(a_munOrigen);
+                    a_arbolT=new c_arbolT(a_Origen);
                     a_colaS=new c_cola();
-                    a_colaS.m_InsertarCola(a_munOrigen);
-                    if(a_munOrigen==a_munDestino){
-                        a_colaS.m_VaciaCola();
+                    a_colaS.m_insertarCola(a_Origen);
+                    if(a_Origen==a_Destino){
+                        a_colaS.m_vaciaCola();
                     }
                     do{
                         int X=a_colaS.m_getVertice();
                         for (int i = 0; i < a_G.length; i++) {
                             int Y=a_G[i];
-                            if(m_buscaGrafo(X,Y)&&a_arbolT.m_BuscaArbol(Y)){
-                                a_arbolT.m_InsertaArbol(X, Y);
-                                a_colaS.m_InsertarCola(Y);
-                                if(Y==a_munDestino){
+                            if(m_buscaGrafo(X,Y)&&a_arbolT.m_buscaArbol(Y)){
+                                a_arbolT.m_insertaArbol(X, Y);
+                                a_colaS.m_insertarCola(Y);
+                                if(Y==a_Destino){
                                     i = a_G.length;
-                                    a_colaS.m_VaciaCola();
+                                    a_colaS.m_vaciaCola();
                                 }
                             }
                         }
                         if(a_colaS.m_getRaiz()!=null){
-                            a_colaS.m_EliminaCola();
+                            a_colaS.m_sacarCola();
                         }
                     }while(a_colaS.m_getRaiz()!=null);
                     System.out.println("\n");
-                    a_arbolT.m_ImprimeArbol();
+                    a_arbolT.m_imprimeArbol();
                 }else{
                     if(!v_bdOrigen)
                         System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
@@ -423,43 +423,43 @@ public class c_ruta {
             try{
                 v_Entrada=new Scanner(System.in);
                 System.out.print("\nSucursal de Origen: ");
-                a_munOrigen=v_Entrada.nextInt();
+                a_Origen=v_Entrada.nextInt();
                 System.out.print("Sucursal de Destino: ");
-                a_munDestino=v_Entrada.nextInt();
+                a_Destino=v_Entrada.nextInt();
                 boolean v_bdOrigen=false;
                 boolean v_bdDestino=false;
                 for (int i = 0; i < a_G.length; i++) {
-                    if(a_G[i]==a_munOrigen)
+                    if(a_G[i]==a_Origen)
                         v_bdOrigen=true;
-                    if(a_G[i]==a_munDestino)
+                    if(a_G[i]==a_Destino)
                         v_bdDestino=true;
                 }
                 if(v_bdOrigen&&v_bdDestino){
-                    a_arbolT=new c_arbolT(a_munOrigen);
+                    a_arbolT=new c_arbolT(a_Origen);
                     a_pilaW=new c_pila();
-                    a_pilaW.m_InsertaPila(a_munOrigen);
-                    if(a_munOrigen!=a_munDestino){
+                    a_pilaW.m_insertaPila(a_Origen);
+                    if(a_Origen!=a_Destino){
                         do{
                             for (int i = 0; i < a_G.length; i++) {
                                 int X=a_pilaW.m_getVertice();
                                 int Y=a_G[i];
-                                if(m_buscaGrafo(X,Y)&&a_arbolT.m_BuscaArbol(Y)){
-                                    a_arbolT.m_InsertaArbol(X, Y);
-                                    a_pilaW.m_InsertaPila(Y);
+                                if(m_buscaGrafo(X,Y)&&a_arbolT.m_buscaArbol(Y)){
+                                    a_arbolT.m_insertaArbol(X, Y);
+                                    a_pilaW.m_insertaPila(Y);
                                     i=-1;
-                                    if(Y==a_munDestino){
+                                    if(Y==a_Destino){
                                         i = a_G.length;
-                                        a_pilaW.m_VaciaPila();
+                                        a_pilaW.m_vaciaPila();
                                     }
                                 }
                             }
                             if(a_pilaW.m_getRaiz()!=null){
-                                a_pilaW.m_SacaPila();
+                                a_pilaW.m_sacaPila();
                             }
                         }while(a_pilaW.m_getRaiz()!=null);
                     }
                     System.out.println("\n");
-                    a_arbolT.m_ImprimeArbol();
+                    a_arbolT.m_imprimeArbol();
                 }else{
                     if(!v_bdOrigen)
                         System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
