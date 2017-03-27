@@ -461,9 +461,15 @@ public class c_ruta {
                 boolean v_bdDestino=false;
                 v_Eliminados = new c_eliminados();
                 if(v_Eliminados.m_buscaEliminado(a_Origen))
-                    v_bdOrigen=true;
+                    for (int i = 0; i < a_G.length; i++) {
+                        if(a_G[i]==a_Origen)
+                            v_bdOrigen=true;
+                    }
                 if(v_Eliminados.m_buscaEliminado(a_Destino))
-                    v_bdDestino=true;
+                    for (int i = 0; i < a_G.length; i++) {
+                        if(a_G[i]==a_Destino)
+                            v_bdDestino=true;
+                    }
                 if(v_bdOrigen&&v_bdDestino){
                     a_arbolT=new c_arbolT(a_Origen);
                     a_colaS=new c_cola();
@@ -491,6 +497,7 @@ public class c_ruta {
                         }while(a_colaS.m_getRaiz()!=null);    
                     }
                     a_arbolT.m_imprimeArbol();
+                    System.out.println("\n"+a_arbolT.m_imprimeCamino(a_Destino));
                 }else{
                     if(!v_bdOrigen)
                         System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
@@ -519,9 +526,15 @@ public class c_ruta {
                 boolean v_bdDestino=false;
                 v_Eliminados = new c_eliminados();
                 if(v_Eliminados.m_buscaEliminado(a_Origen))
-                    v_bdOrigen=true;
+                    for (int i = 0; i < a_G.length; i++) {
+                        if(a_G[i]==a_Origen)
+                            v_bdOrigen=true;
+                    }
                 if(v_Eliminados.m_buscaEliminado(a_Destino))
-                    v_bdDestino=true;
+                    for (int i = 0; i < a_G.length; i++) {
+                        if(a_G[i]==a_Destino)
+                            v_bdDestino=true;
+                    }
                 if(v_bdOrigen&&v_bdDestino){
                     a_arbolT=new c_arbolT(a_Origen);
                     a_pilaW=new c_pila();
@@ -547,6 +560,7 @@ public class c_ruta {
                         }while(a_pilaW.m_getRaiz()!=null);
                     }
                     a_arbolT.m_imprimeArbol();
+                    System.out.println("\n"+a_arbolT.m_imprimeCamino(a_Destino));
                 }else{
                     if(!v_bdOrigen)
                         System.out.println("\u001B[31mError: No existe el origen\u001B[30m");

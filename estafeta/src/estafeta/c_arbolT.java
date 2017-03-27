@@ -64,10 +64,37 @@ public class c_arbolT {
         }
         c_nodoT v_Raiz = p_Raiz;
         int v_Vertice=v_Raiz.m_getVertice();
-        System.out.println("┠ "+v_Eliminado.m_buscaNodo(v_Vertice));
+        System.out.println("┠ \u001B[31m"+v_Eliminado.m_buscaNodo(v_Vertice)+"\u001B[30m");
         for (int i = 0; i < v_Raiz.m_getHijos(); i++) {
             c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
             m_imprimeArbol(v_Hijo,v_Tabulacion+1);
         }
+    }
+    
+    public String m_imprimeCamino(int p_Objetivo){
+        String v_Camino="";
+        c_nodoT v_Raiz=a_Raiz;
+        v_Camino=m_imprimeCamino(v_Raiz, p_Objetivo,v_Camino);
+        return v_Camino;
+    }
+    
+    private String m_imprimeCamino(c_nodoT p_Raiz,int p_Objetivo,String p_Camino){
+        c_eliminados v_Eliminado = new c_eliminados();
+        c_nodoT v_Raiz = p_Raiz;
+        String v_Camino=p_Camino;
+        String v_caminoTemporal;
+        String v_Objetivo;
+        int v_Vertice=v_Raiz.m_getVertice();
+        v_Camino=v_Camino+v_Eliminado.m_buscaNodo(v_Vertice);
+        if(v_Vertice!=p_Objetivo)
+            v_Camino=v_Camino+",";
+            for (int i = 0; i < v_Raiz.m_getHijos(); i++) {
+                c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
+                v_caminoTemporal=m_imprimeCamino(v_Hijo, p_Objetivo, v_Camino);
+                if(v_caminoTemporal.endsWith(","+p_Objetivo)){
+                    v_Camino=v_caminoTemporal;
+                }
+            }
+        return v_Camino;
     }
 }
