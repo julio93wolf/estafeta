@@ -382,38 +382,39 @@ public class c_ruta {
     }  
     
     private void m_eliminaNodo(){
-        RandomAccessFile v_Maestro = null,v_Indice=null, v_Eliminados=null;
-        long v_apActualMaestro,v_apFinalMaestro;
+        c_eliminados v_Eliminados;
+        RandomAccessFile v_Maestro = null,v_Indice=null;
+        long v_apActual,v_apFinal;
         Scanner v_Entrada;
         String v_Opcion="1";
         int v_Nodo;
         try{
             v_Maestro = new RandomAccessFile("src/files/maestro.dat","rw");
             v_Indice = new RandomAccessFile("src/files/indice.dat","rw");
-            v_Eliminados = new RandomAccessFile("src/files/indice.dat","rw");
+            
         }catch(Exception e){
             System.out.println("\u001B[31mError: No se pudo abrir el archivo\u001B[30m");
         }
-        
-        if(v_Maestro!=null&&v_Indice!=null&&v_Eliminados!=null){
+        if(v_Maestro!=null&&v_Indice!=null){
             do{
                 try{
                     v_Opcion="1";
-                    v_apActualMaestro=v_Maestro.getFilePointer();
-                    v_apFinalMaestro=v_Maestro.length();
-                    v_Eliminados.seek(v_Eliminados.length());
+                    v_apActual=v_Maestro.getFilePointer();
+                    v_apFinal=v_Maestro.length();
                     v_Entrada=new Scanner(System.in);
+                    v_Eliminados = new c_eliminados();
                     System.out.print("\nIngrese el nodo: ");
                     v_Nodo=v_Entrada.nextInt();
-                    while(v_apActualMaestro!=v_apFinalMaestro){
+                    while(v_apActual!=v_apFinal){
                         a_Llave=v_Maestro.readInt();
                         a_Origen=v_Maestro.readInt();
                         a_Destino=v_Maestro.readInt();
-                        v_Maestro.seek(v_apActualMaestro);
+                        v_Maestro.seek(v_apActual);
                         if(a_Llave>0){
                             if(a_Origen==v_Nodo||a_Destino==v_Nodo){
                                 v_Maestro.writeInt(-1);
                                 v_Indice.writeInt(-1);
+                                v_Eliminados.m_Inserta(v_Nodo);
                             }else{
                                 v_Maestro.readInt();
                                 v_Indice.readInt();
@@ -427,7 +428,7 @@ public class c_ruta {
                         v_Maestro.readFloat();
                         v_Maestro.readFloat();
                         v_Indice.readLong();
-                        v_apActualMaestro=v_Maestro.getFilePointer();
+                        v_apActual=v_Maestro.getFilePointer();
                     }
                     System.out.println("\n\u001B[31m¿Desea eliminar otro nodo?\u001B[30m");
                     System.out.println("\u001B[34m[Si]\u001B[30m=1\n\u001B[34m[No]\u001B[30m=Cualquier tecla");
@@ -438,10 +439,14 @@ public class c_ruta {
                 }
             }while("1".equals(v_Opcion));            
         }
-        try{v_Maestro.close();}catch(Exception e){}
+        try{
+            v_Maestro.close();
+            v_Indice.close();
+        }catch(Exception e){}
     }
     
     private void m_busquedaAnchura(){
+        c_eliminados v_Eliminados;
         Scanner v_Entrada;        
         m_fillGrafo();
         m_fillG();
@@ -454,12 +459,11 @@ public class c_ruta {
                 a_Destino=v_Entrada.nextInt();
                 boolean v_bdOrigen=false;
                 boolean v_bdDestino=false;
-                for (int i = 0; i < a_G.length; i++) {
-                    if(a_G[i]==a_Origen)
-                        v_bdOrigen=true;
-                    if(a_G[i]==a_Destino)
-                        v_bdDestino=true;
-                }
+                v_Eliminados = new c_eliminados();
+                if(v_Eliminados.m_buscaEliminado(a_Origen))
+                    v_bdOrigen=true;
+                if(v_Eliminados.m_buscaEliminado(a_Destino))
+                    v_bdDestino=true;
                 if(v_bdOrigen&&v_bdDestino){
                     a_arbolT=new c_arbolT(a_Origen);
                     a_colaS=new c_cola();
@@ -500,6 +504,7 @@ public class c_ruta {
     }
     
     private void m_busquedaProfundidad(){
+        c_eliminados v_Eliminados;
         Scanner v_Entrada;        
         m_fillGrafo();
         m_fillG();
@@ -512,12 +517,11 @@ public class c_ruta {
                 a_Destino=v_Entrada.nextInt();
                 boolean v_bdOrigen=false;
                 boolean v_bdDestino=false;
-                for (int i = 0; i < a_G.length; i++) {
-                    if(a_G[i]==a_Origen)
-                        v_bdOrigen=true;
-                    if(a_G[i]==a_Destino)
-                        v_bdDestino=true;
-                }
+                v_Eliminados = new c_eliminados();
+                if(v_Eliminados.m_buscaEliminado(a_Origen))
+                    v_bdOrigen=true;
+                if(v_Eliminados.m_buscaEliminado(a_Destino))
+                    v_bdDestino=true;
                 if(v_bdOrigen&&v_bdDestino){
                     a_arbolT=new c_arbolT(a_Origen);
                     a_pilaW=new c_pila();
@@ -576,9 +580,9 @@ public class c_ruta {
                 v_Destino=v_Maestro.readInt();
                 v_Peso1=v_Maestro.readFloat();
                 v_Peso2=v_Maestro.readFloat();
-                if(v_Llave>0){
+                //if(v_Llave>0){
                     v_tamañoGrafo++;
-                }
+                //}
                 v_apActual=v_Maestro.getFilePointer();
             }
             a_Grafo=new Object[v_tamañoGrafo][4];
@@ -591,18 +595,18 @@ public class c_ruta {
                 v_Destino=v_Maestro.readInt();
                 v_Peso1=v_Maestro.readFloat();
                 v_Peso2=v_Maestro.readFloat();
-                if(v_Llave>0){
+                //if(v_Llave>0){
                     a_Grafo[v_tamañoGrafo][0]= v_Origen;
                     a_Grafo[v_tamañoGrafo][1]= v_Destino;
                     a_Grafo[v_tamañoGrafo][2]= v_Peso1;
                     a_Grafo[v_tamañoGrafo][3]= v_Peso2;
                     v_tamañoGrafo++;
-                }
+                //}
                 v_apActual=v_Maestro.getFilePointer();
             }
             v_Maestro.close();
         }catch(Exception e){
-            System.out.println("\u001B[31mError: No se pudo abrir el archivos maestro\u001B[30m");
+            System.out.println("\u001B[31mError: No se pudo abrir el archivo maestro\u001B[30m");
         }
     }
     
@@ -624,12 +628,12 @@ public class c_ruta {
                 v_Maestro.readInt();
                 v_Maestro.readFloat();
                 v_Maestro.readFloat();
-                if(v_Llave>0){
+                //if(v_Llave>0){
                     if(v_Anterior!=v_Vertice){
                         v_Anterior=v_Vertice;
                         v_tamañoG++;
                     }
-                }
+                //}
                 v_apActual=v_Maestro.getFilePointer();
             }
             a_G=new int[v_tamañoG];
@@ -643,14 +647,13 @@ public class c_ruta {
                 v_Maestro.readInt();
                 v_Maestro.readFloat();
                 v_Maestro.readFloat();
-                if(v_Llave>0){
+                //if(v_Llave>0){
                     if(v_Anterior!=v_Vertice){
                         a_G[v_Indice]=v_Vertice;
                         v_Indice++;
                         v_Anterior=v_Vertice;
                     }
-
-                }
+                //}
                 v_apActual=v_Maestro.getFilePointer();
             }
             v_Maestro.close();
