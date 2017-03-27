@@ -57,13 +57,14 @@ public class c_arbolT {
     }
     
     private void m_imprimeArbol(c_nodoT p_Raiz,int p_Tabulacion){
+        c_eliminados v_Eliminado = new c_eliminados();
         int v_Tabulacion=p_Tabulacion;
         for (int i = 0; i < v_Tabulacion; i++) {
             System.out.print("┃ ");
         }
         c_nodoT v_Raiz = p_Raiz;
         int v_Vertice=v_Raiz.m_getVertice();
-        System.out.println("┠ "+v_Vertice);
+        System.out.println("┠ "+v_Eliminado.m_buscaNodo(v_Vertice));
         for (int i = 0; i < v_Raiz.m_getHijos(); i++) {
             c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
             m_imprimeArbol(v_Hijo,v_Tabulacion+1);
