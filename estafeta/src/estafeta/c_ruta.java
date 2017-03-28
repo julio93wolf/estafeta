@@ -1,6 +1,8 @@
 package estafeta;
 
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -24,6 +26,7 @@ public class c_ruta {
     private c_cola a_colaS;
     private c_cola a_Abierto;
     private c_pila a_pilaW;
+    private List a_tablaA;
     
     /**
      * @name: c_caminos
@@ -51,17 +54,18 @@ public class c_ruta {
                 System.out.println("\u001B[34m[5]\u001B[30m Eliminar nodo");
                 System.out.println("\u001B[34m[6]\u001B[30m Busqueda en anchura");
                 System.out.println("\u001B[34m[7]\u001B[30m Busqueda en profundidad");
-                System.out.println("\u001B[34m[8]\u001B[30m Salir");
+                System.out.println("\u001B[34m[8]\u001B[30m Busqueda Grafos O");
+                System.out.println("\u001B[34m[9]\u001B[30m Salir");
                 System.out.print("Opción: ");
                 v_Opcion=v_Entrada.nextInt();
-                if(v_Opcion>0&&v_Opcion<9)
+                if(v_Opcion>0&&v_Opcion<10)
                     m_Opcion(v_Opcion);
                 else
                     System.out.println("\u001B[31mError: Valor fuera de rango\u001B[30m");
             }catch(Exception e){
                 System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
             }
-        }while(v_Opcion!=8);
+        }while(v_Opcion!=9);
     }// Fin del método m_Menu
     
     /**
@@ -99,6 +103,10 @@ public class c_ruta {
             }
             case 7:{
                 m_busquedaProfundidad();
+                break;
+            }
+            case 8:{
+                m_busquedaGrafoO();
                 break;
             }
         }
@@ -575,7 +583,11 @@ public class c_ruta {
     
     private void m_busquedaGrafoO(){
         c_eliminados v_Eliminados;
-        int v_n;
+        a_tablaA = new ArrayList();
+        c_tablaA v_Regristro;
+        boolean v_Bandera=false;
+        int v_n,v_Anterior=0;
+        float v_Peso=0;
         Scanner v_Entrada;
         m_fillGrafo();
         m_fillG();
@@ -604,11 +616,42 @@ public class c_ruta {
                 do{
                     v_n=a_Abierto.m_getVertice();
                     a_Abierto.m_sacarCola();
-                    if(v_n==a_Destino){
-                        
+                    //Obtiene los sucesores de n
+                    List v_Sucesores = new ArrayList();
+                    for (int i = 0; i < a_Grafo.length; i++) {
+                        if((int)a_Grafo[i][0]==v_n){
+                            c_sucesor v_Sucesor=new c_sucesor((int)a_Grafo[i][1],(float)a_Grafo[i][2]);
+                            v_Sucesores.add(v_Sucesor);
+                        }
                     }
-                    a_colaS= new c_cola();
+                    v_Regristro = new c_tablaA(v_n,v_Anterior,v_Peso,v_Sucesores);
+                    a_tablaA.add(v_Regristro);
+                    //Se recorre cada uno de los sucesores
+                    for (int i = 0; i < v_Sucesores.size(); i++) {
+                        c_sucesor v_Sucesor=(c_sucesor)v_Sucesores.get(i);
+                        for (int j = 0; j < a_tablaA.size(); j++) {
+                            v_Regristro=(c_tablaA)a_tablaA.get(j);
+                            if(v_Regristro.m_getN()==v_Sucesor.m_getSucesor()){
+                                v_Bandera=true;
+                            }
+                        }
+                        if(v_Bandera){
+                            
+                        }else{
+                            v_Anterior=v_n;
+                            v_Peso=v_Sucesor.m_getPeso();
+                            v_Regristro = new c_tablaA(v_n,v_Anterior,v_Peso,null);
+                        }
+                        v_Bandera=false;
+                    }
+                    
                 }while(a_Abierto.m_getRaiz()!=null);    
+                System.out.println("");
+            }else{
+                if(!v_bdOrigen)
+                    System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
+                if(!v_bdDestino)
+                    System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
             }
         }catch(Exception e){}
     }
