@@ -22,6 +22,7 @@ public class c_ruta {
     private int [] a_G=null;
     private c_arbolT a_arbolT;
     private c_cola a_colaS;
+    private c_cola a_Abierto;
     private c_pila a_pilaW;
     
     /**
@@ -391,7 +392,6 @@ public class c_ruta {
         try{
             v_Maestro = new RandomAccessFile("src/files/maestro.dat","rw");
             v_Indice = new RandomAccessFile("src/files/indice.dat","rw");
-            
         }catch(Exception e){
             System.out.println("\u001B[31mError: No se pudo abrir el archivo\u001B[30m");
         }
@@ -571,6 +571,46 @@ public class c_ruta {
                 System.out.println(e.toString());
             }
         }
+    }
+    
+    private void m_busquedaGrafoO(){
+        c_eliminados v_Eliminados;
+        int v_n;
+        Scanner v_Entrada;
+        m_fillGrafo();
+        m_fillG();
+        try{
+            v_Entrada=new Scanner(System.in);
+            System.out.print("\nSucursal de Origen: ");
+            a_Origen=v_Entrada.nextInt();
+            System.out.print("Sucursal de Destino: ");
+            a_Destino=v_Entrada.nextInt();
+            boolean v_bdOrigen=false;
+            boolean v_bdDestino=false;
+            v_Eliminados = new c_eliminados();
+            if(v_Eliminados.m_buscaEliminado(a_Origen))
+                for (int i = 0; i < a_G.length; i++) {
+                    if(a_G[i]==a_Origen)
+                        v_bdOrigen=true;
+                }
+            if(v_Eliminados.m_buscaEliminado(a_Destino))
+                for (int i = 0; i < a_G.length; i++) {
+                    if(a_G[i]==a_Destino)
+                        v_bdDestino=true;
+                }
+            if(v_bdOrigen&&v_bdDestino){
+                a_Abierto=new c_cola();
+                a_Abierto.m_insertarCola(a_Origen);
+                do{
+                    v_n=a_Abierto.m_getVertice();
+                    a_Abierto.m_sacarCola();
+                    if(v_n==a_Destino){
+                        
+                    }
+                    a_colaS= new c_cola();
+                }while(a_Abierto.m_getRaiz()!=null);    
+            }
+        }catch(Exception e){}
     }
     
     private void m_fillGrafo(){

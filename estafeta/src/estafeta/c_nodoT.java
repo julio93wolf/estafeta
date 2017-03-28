@@ -4,7 +4,6 @@ public class c_nodoT {
     private int a_Vertice;
     private int a_noHijos;
     private c_nodoT [] a_Hijos;
-    //private c_nodoT a_HijosT[];
 
     public c_nodoT(int p_Vertice) {
         a_Vertice=p_Vertice;
@@ -16,7 +15,6 @@ public class c_nodoT {
         for (int i = 0; i < a_noHijos; i++) {
             v_HijosT[i]=a_Hijos[i];
         }
-        //m_copiaVertices();
         v_HijosT[a_noHijos]=p_Vector;
         a_Hijos = v_HijosT;
         a_noHijos++;

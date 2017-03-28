@@ -21,7 +21,7 @@ public class c_cola {
         a_Raiz=a_Raiz.m_getSiguiente();
     }
     
-    public int m_getVertice (){
+    public int m_getVertice(){
         return a_Raiz.m_getVertice();
     }
     
