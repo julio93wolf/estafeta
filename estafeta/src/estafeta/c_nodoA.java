@@ -11,7 +11,7 @@ public class c_nodoA {
     private c_nodoA a_Izquierdo;
     private c_nodoA a_Derecho;
     
-    public c_nodoA(int p_Llave,long p_Direccion,long p_dirIndice, c_nodoA p_Izquierdo, c_nodoA p_Derecho){
+    private c_nodoA(int p_Llave,long p_Direccion,long p_dirIndice, c_nodoA p_Izquierdo, c_nodoA p_Derecho){
         a_Llave = p_Llave;
         a_Direccion = p_Direccion;
         a_dirIndice =p_dirIndice;
