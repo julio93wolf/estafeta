@@ -522,7 +522,7 @@ public class c_ruta {
             try{
                 v_Entrada=new Scanner(System.in);
                 
-                System.out.print("Sucursal de Origen: ");
+                System.out.print("\nSucursal de Origen: ");
                 a_Origen=v_Entrada.next();
                 v_Origen=new StringBuffer(a_Origen);
                 v_Origen.setLength(17);

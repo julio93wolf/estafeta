@@ -71,7 +71,7 @@ public class c_eliminados {
                     v_Nodo= new String(v_nodoEliminado);
                     
                     if(v_Nodo.equals(p_Nodo)){
-                        v_Bandera="*";
+                        v_Bandera="✱";
                     }
                     v_apActual=v_Eliminados.getFilePointer();
                 }

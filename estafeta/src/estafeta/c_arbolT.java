@@ -53,6 +53,7 @@ public class c_arbolT {
     public void m_imprimeArbol(){
         int v_Tabulacion=0;
         c_nodoT v_Raiz=a_Raiz;
+        System.out.println("");
         m_imprimeArbol(v_Raiz,v_Tabulacion);
     }
     
@@ -84,13 +85,13 @@ public class c_arbolT {
         String v_Camino=p_Camino;
         String v_caminoTemporal;
         String v_Vertice=v_Raiz.m_getVertice();
-        v_Camino=v_Camino+v_Eliminado.m_buscaNodo(v_Vertice);
-        if(v_Vertice.equals(p_Objetivo))
-            v_Camino=v_Camino+",";
+        v_Camino=v_Camino+"\u001B[34m"+v_Eliminado.m_buscaNodo(v_Vertice)+"\u001B[30m";
+        if(!v_Vertice.equals(p_Objetivo))
+            v_Camino=v_Camino+" ⇒ ";
             for (int i = 0; i < v_Raiz.m_getHijos(); i++) {
                 c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
                 v_caminoTemporal=m_imprimeCamino(v_Hijo, p_Objetivo, v_Camino);
-                if(v_caminoTemporal.endsWith(","+p_Objetivo)){
+                if(v_caminoTemporal.endsWith(" ⇒ \u001B[34m"+p_Objetivo+"\u001B[30m")){
                     v_Camino=v_caminoTemporal;
                 }
             }
