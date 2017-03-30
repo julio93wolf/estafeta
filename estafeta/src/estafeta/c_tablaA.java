@@ -4,28 +4,28 @@ import java.util.List;
 
 public class c_tablaA {
     
-    private int a_n;
-    private int a_Anterior;
-    private float a_Peso;
+    private String a_n;
+    private String a_Anterior;
+    private float a_Costo;
     private List a_Sucesores;
     
-    public c_tablaA(int p_n,int p_Anterior,float p_Peso,List p_Sucesores){
+    public c_tablaA(String p_n,String p_Anterior,float p_Costo,List p_Sucesores){
         a_n=p_n;
         a_Anterior=p_Anterior;
-        a_Peso=p_Peso;
+        a_Costo=p_Costo;
         a_Sucesores=p_Sucesores;
     }
     
-    public int m_getN(){
+    public String m_getN(){
         return a_n;
     }
     
-    public int m_getAnterior(){
+    public String m_getAnterior(){
         return a_Anterior;
     }
     
-    public float m_getPeso(){
-        return a_Peso;
+    public float m_getCosto(){
+        return a_Costo;
     }
     
     public List m_getSucesores(){
@@ -35,4 +35,13 @@ public class c_tablaA {
     public void m_setSucesores(List p_Sucesores){
         a_Sucesores=p_Sucesores;
     }
+    
+    public void m_setCosto(float p_Costo){
+        a_Costo=p_Costo;
+    }
+    
+    public void m_setAnterior(String p_Anterior){
+        a_Anterior=p_Anterior;
+    }
+            
 }
