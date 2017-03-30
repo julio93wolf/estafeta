@@ -2,11 +2,15 @@ package estafeta;
 public class c_nodoT {
     
     private String a_Vertice;
+    private float a_Costo1;
+    private float a_Costo2;
     private int a_noHijos;
     private c_nodoT [] a_Hijos;
 
-    public c_nodoT(String p_Vertice) {
+    public c_nodoT(String p_Vertice,float p_Costo1,float p_Costo2) {
         a_Vertice=p_Vertice;
+        a_Costo1=p_Costo1;
+        a_Costo2=p_Costo2;
     }
     
     public void m_insertaVertice(c_nodoT p_Vector){
@@ -22,6 +26,14 @@ public class c_nodoT {
     
     public String m_getVertice(){
         return a_Vertice;
+    }
+    
+    public float m_getCosto1(){
+        return a_Costo1;
+    }
+    
+    public float m_getCosto2(){
+        return a_Costo2;
     }
     
     public int m_getHijos(){

@@ -101,7 +101,7 @@ public class c_ruta {
                 break;
             }
             case 7:{
-                //m_busquedaProfundidad();
+                m_busquedaProfundidad();
                 break;
             }
             case 8:{
@@ -549,7 +549,7 @@ public class c_ruta {
                     }
                 
                 if(v_bdOrigen&&v_bdDestino){
-                    a_arbolT=new c_arbolT(v_Origen.toString());
+                    a_arbolT=new c_arbolT(v_Origen.toString(),0,0);
                     a_colaS=new c_cola();
                     a_colaS.m_insertarCola(v_Origen.toString());
                     if(v_Origen.equals(v_Destino)){
@@ -561,7 +561,7 @@ public class c_ruta {
                             for (int i = 0; i < a_G.length; i++) {
                                 String Y=a_G[i];
                                 if(m_buscaGrafo(X,Y)&&a_arbolT.m_buscaArbol(Y)){
-                                    a_arbolT.m_insertaArbol(X, Y);
+                                    a_arbolT.m_insertaArbol(X,Y,m_buscaCosto(X,Y,2),m_buscaCosto(X,Y,3));
                                     a_colaS.m_insertarCola(Y);
                                     if(Y.equals(v_Destino.toString())){
                                         i = a_G.length;
@@ -575,7 +575,81 @@ public class c_ruta {
                         }while(a_colaS.m_getRaiz()!=null);    
                     }
                     a_arbolT.m_imprimeArbol();
-                    System.out.println("\n"+a_arbolT.m_imprimeCamino(v_Destino.toString()));
+                    a_arbolT.m_imprimeCamino(v_Destino.toString());
+                    a_arbolT.m_imprimeCosto(v_Destino.toString());
+                }else{
+                    if(!v_bdOrigen)
+                        System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
+                    if(!v_bdDestino)
+                        System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
+                }
+            }catch(Exception e){
+                System.out.println(e.toString());
+            }
+        }
+    }
+    
+    
+    private void m_busquedaProfundidad(){
+        StringBuffer v_Origen,v_Destino;
+        c_eliminados v_Eliminados;
+        Scanner v_Entrada;        
+        m_fillGrafo();
+        m_fillG();
+        if(a_G!=null){
+            try{
+                v_Entrada=new Scanner(System.in);
+                
+                System.out.print("\nSucursal de Origen: ");
+                a_Origen=v_Entrada.next();
+                v_Origen=new StringBuffer(a_Origen);
+                v_Origen.setLength(17);
+
+                System.out.print("Sucursal de Destino: ");
+                a_Destino=v_Entrada.next();
+                v_Destino=new StringBuffer(a_Destino);
+                v_Destino.setLength(17);
+                
+                boolean v_bdOrigen=false;
+                boolean v_bdDestino=false;
+                v_Eliminados = new c_eliminados();
+                if(v_Eliminados.m_buscaEliminado(v_Origen.toString()))
+                    for (int i = 0; i < a_G.length; i++) {
+                        if(a_G[i].equals(v_Origen.toString()))
+                            v_bdOrigen=true;
+                    }
+                if(v_Eliminados.m_buscaEliminado(v_Destino.toString()))
+                    for (int i = 0; i < a_G.length; i++) {
+                        if(a_G[i].equals(v_Destino.toString()))
+                            v_bdDestino=true;
+                    }
+                if(v_bdOrigen&&v_bdDestino){
+                    a_arbolT=new c_arbolT(v_Origen.toString(),0,0);
+                    a_pilaW=new c_pila();
+                    a_pilaW.m_insertaPila(v_Origen.toString());
+                    if(!v_Origen.equals(v_Destino)){
+                        do{
+                            for (int i = 0; i < a_G.length; i++) {
+                                String X=a_pilaW.m_getVertice();
+                                String Y=a_G[i];
+                                if(m_buscaGrafo(X,Y)&&a_arbolT.m_buscaArbol(Y)){
+                                    a_arbolT.m_insertaArbol(X,Y,m_buscaCosto(X,Y,2),m_buscaCosto(X,Y,3));
+                                    a_pilaW.m_insertaPila(Y);
+                                    i=-1;
+                                    if(Y.equals(v_Destino.toString())){
+                                        i = a_G.length;
+                                        a_pilaW.m_vaciaPila();
+                                    }
+                                }
+                            }
+                            if(a_pilaW.m_getRaiz()!=null){
+                                a_pilaW.m_sacaPila();
+                            }
+                        }while(a_pilaW.m_getRaiz()!=null);
+                    }
+                    a_arbolT.m_imprimeArbol();
+                    a_arbolT.m_imprimeCamino(v_Destino.toString());
+                    a_arbolT.m_imprimeCosto(v_Destino.toString());
                 }else{
                     if(!v_bdOrigen)
                         System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
@@ -589,69 +663,6 @@ public class c_ruta {
     }
     
     /*
-    private void m_busquedaProfundidad(){
-        c_eliminados v_Eliminados;
-        Scanner v_Entrada;        
-        m_fillGrafo();
-        m_fillG();
-        if(a_G!=null){
-            try{
-                v_Entrada=new Scanner(System.in);
-                System.out.print("\nSucursal de Origen: ");
-                a_Origen=v_Entrada.nextInt();
-                System.out.print("Sucursal de Destino: ");
-                a_Destino=v_Entrada.nextInt();
-                boolean v_bdOrigen=false;
-                boolean v_bdDestino=false;
-                v_Eliminados = new c_eliminados();
-                if(v_Eliminados.m_buscaEliminado(a_Origen))
-                    for (int i = 0; i < a_G.length; i++) {
-                        if(a_G[i]==a_Origen)
-                            v_bdOrigen=true;
-                    }
-                if(v_Eliminados.m_buscaEliminado(a_Destino))
-                    for (int i = 0; i < a_G.length; i++) {
-                        if(a_G[i]==a_Destino)
-                            v_bdDestino=true;
-                    }
-                if(v_bdOrigen&&v_bdDestino){
-                    a_arbolT=new c_arbolT(a_Origen);
-                    a_pilaW=new c_pila();
-                    a_pilaW.m_insertaPila(a_Origen);
-                    if(a_Origen!=a_Destino){
-                        do{
-                            for (int i = 0; i < a_G.length; i++) {
-                                int X=a_pilaW.m_getVertice();
-                                int Y=a_G[i];
-                                if(m_buscaGrafo(X,Y)&&a_arbolT.m_buscaArbol(Y)){
-                                    a_arbolT.m_insertaArbol(X, Y);
-                                    a_pilaW.m_insertaPila(Y);
-                                    i=-1;
-                                    if(Y==a_Destino){
-                                        i = a_G.length;
-                                        a_pilaW.m_vaciaPila();
-                                    }
-                                }
-                            }
-                            if(a_pilaW.m_getRaiz()!=null){
-                                a_pilaW.m_sacaPila();
-                            }
-                        }while(a_pilaW.m_getRaiz()!=null);
-                    }
-                    a_arbolT.m_imprimeArbol();
-                    System.out.println("\n"+a_arbolT.m_imprimeCamino(a_Destino));
-                }else{
-                    if(!v_bdOrigen)
-                        System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
-                    if(!v_bdDestino)
-                        System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
-                }
-            }catch(Exception e){
-                System.out.println(e.toString());
-            }
-        }
-    }
-    
     private void m_busquedaGrafoO(){
         c_eliminados v_Eliminados;
         a_tablaA = new ArrayList();
@@ -855,5 +866,17 @@ public class c_ruta {
                 v_Bandera=true;
         }
         return v_Bandera;
+    }   
+    
+    private float m_buscaCosto(String p_X,String p_Y,int p_Indice){
+        float v_Costo=0;
+        String v_X,v_Y;
+        for (int i = 0; i < a_Grafo.length; i++) {
+            v_X=(String)a_Grafo[i][0];
+            v_Y=(String)a_Grafo[i][1];
+            if(v_X.equals(p_X)&&v_Y.equals(p_Y))
+                v_Costo=(float)a_Grafo[i][p_Indice];
+        }
+        return v_Costo;
     }   
 }

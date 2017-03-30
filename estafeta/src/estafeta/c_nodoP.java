@@ -3,14 +3,14 @@ package estafeta;
 
 public class c_nodoP {
     
-    private int a_Vertice;
+    private String a_Vertice;
     private c_nodoP a_Siguiente;
     
-    public c_nodoP(int p_Vertice){
+    public c_nodoP(String p_Vertice){
         this(p_Vertice,null);
     }
     
-    private c_nodoP(int p_Vertice,c_nodoP p_Siguiente){
+    private c_nodoP(String p_Vertice,c_nodoP p_Siguiente){
         a_Vertice=p_Vertice;
         a_Siguiente=p_Siguiente;    
     }
@@ -23,7 +23,7 @@ public class c_nodoP {
         return a_Siguiente;
     }
     
-    public int m_getVertice(){
+    public String m_getVertice(){
         return a_Vertice;
     }
 }
