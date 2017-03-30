@@ -1,11 +1,11 @@
 package estafeta;
 public class c_nodoT {
     
-    private int a_Vertice;
+    private String a_Vertice;
     private int a_noHijos;
     private c_nodoT [] a_Hijos;
 
-    public c_nodoT(int p_Vertice) {
+    public c_nodoT(String p_Vertice) {
         a_Vertice=p_Vertice;
     }
     
@@ -20,7 +20,7 @@ public class c_nodoT {
         a_noHijos++;
     }
     
-    public int m_getVertice(){
+    public String m_getVertice(){
         return a_Vertice;
     }
     

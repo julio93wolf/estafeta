@@ -1,15 +1,15 @@
 package estafeta;
 
 public class c_nodoC {
-    private int a_Vertice;
+    private String a_Vertice;
     private c_nodoC a_Siguiente;
     
-    private c_nodoC(int p_Vertice,c_nodoC p_Siguiente){
+    private c_nodoC(String p_Vertice,c_nodoC p_Siguiente){
         a_Vertice=p_Vertice;
         a_Siguiente=p_Siguiente;    
     }
     
-    public c_nodoC(int p_Vertice){
+    public c_nodoC(String p_Vertice){
         this(p_Vertice,null);
     }
     
@@ -17,7 +17,7 @@ public class c_nodoC {
         a_Siguiente=p_Siguiente;
     }
     
-    public int m_getVertice(){
+    public String m_getVertice(){
         return a_Vertice;
     }
     
