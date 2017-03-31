@@ -786,13 +786,13 @@ public class c_ruta {
         c_tablaA v_Registro;
         for (int j = 0; j < a_tablaA.size(); j++) {
             v_Registro=(c_tablaA)a_tablaA.get(j);
-            if(p_N.equals(v_Registro.m_getN())){
+            if(p_P.equals(v_Registro.m_getN())){
                 v_CosteP=v_Registro.m_getCosto();
             }
         }
         for (int j = 0; j < a_tablaA.size(); j++) {
             v_Registro=(c_tablaA)a_tablaA.get(j);
-            if(p_P.equals(v_Registro.m_getN())){
+            if(p_N.equals(v_Registro.m_getN())){
                 v_CosteN=v_Registro.m_getCosto();
             }
         }
