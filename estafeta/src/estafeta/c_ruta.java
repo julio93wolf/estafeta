@@ -589,7 +589,6 @@ public class c_ruta {
         }
     }
     
-    
     private void m_busquedaProfundidad(){
         StringBuffer v_Origen,v_Destino;
         c_eliminados v_Eliminados;
@@ -662,154 +661,6 @@ public class c_ruta {
         }
     }
     
-    
-    private void m_busquedaGrafoO(int p_Index){
-        StringBuffer v_Origen,v_Destino;
-        c_eliminados v_Eliminados;
-        List v_Sucesores=null;
-        a_tablaA = new ArrayList();
-        c_tablaA v_Regristro;
-        boolean v_Bandera=false;
-        String v_n,v_Anterior=null;
-        float v_CostoN=0;
-        Scanner v_Entrada;
-        m_fillGrafo();
-        m_fillG();
-        try{
-            v_Entrada=new Scanner(System.in);
-            System.out.print("\nSucursal de Origen: ");
-            a_Origen=v_Entrada.next();
-            v_Origen=new StringBuffer(a_Origen);
-            v_Origen.setLength(17);
-            System.out.print("Sucursal de Destino: ");
-            a_Destino=v_Entrada.next();
-            v_Destino=new StringBuffer(a_Destino);
-            v_Destino.setLength(17);
-            boolean v_bdOrigen=false;
-            boolean v_bdDestino=false;
-            v_Eliminados = new c_eliminados();
-            if(v_Eliminados.m_buscaEliminado(v_Origen.toString()))
-                for (int i = 0; i < a_G.length; i++) {
-                    if(a_G[i].equals(v_Origen.toString()))
-                        v_bdOrigen=true;
-                }
-            if(v_Eliminados.m_buscaEliminado(v_Destino.toString()))
-                for (int i = 0; i < a_G.length; i++) {
-                    if(a_G[i].equals(v_Destino.toString()))
-                        v_bdDestino=true;
-                }
-            if(v_bdOrigen&&v_bdDestino){
-                //Inicialización
-                a_Abierto=new c_cola();
-                // Abierta= (inicial)
-                a_Abierto.m_insertarCola(v_Origen.toString());              
-                v_n=a_Abierto.m_getVertice();
-                v_Regristro = new c_tablaA(v_n,v_Anterior,v_CostoN,v_Sucesores);
-                a_tablaA.add(v_Regristro);
-                do{
-                    //n=ExtraerPrimero(Abierta)
-                    v_n=a_Abierto.m_getVertice();
-                    //Si no es el objetivo
-                    if(!v_n.equals(v_Destino.toString())){
-                        //Obtiene los sucesores de n - S=Sucesores(n)
-                        v_Sucesores = new ArrayList();
-                        for (int i = 0; i < a_Grafo.length; i++) {
-                            if(v_n.equals((String)a_Grafo[i][0])){
-                                c_sucesor v_Sucesor=new c_sucesor((String)a_Grafo[i][1],(float)a_Grafo[i][p_Index]);
-                                v_Sucesores.add(v_Sucesor);
-                            }
-                        }
-                        // Añade S a la entrada de n en la tabla_a
-                        for (int i = 0; i < a_tablaA.size(); i++) {
-                            v_Regristro=(c_tablaA)a_tablaA.get(i);
-                            if(v_Regristro.m_getN().equals(v_n)){
-                                v_Regristro.m_setSucesores(v_Sucesores);
-                                a_tablaA.set(i,v_Regristro);
-                            }
-                        }
-                        //Para cada q de S 
-                        for (int i = 0; i < v_Sucesores.size(); i++) {   
-                            // Si q pertenece a tabla_a
-                            c_sucesor v_Sucesor=(c_sucesor)v_Sucesores.get(i);
-                            for (int j = 0; j < a_tablaA.size(); j++) {
-                                v_Regristro=(c_tablaA)a_tablaA.get(j);
-                                if(v_Regristro.m_getN().equals(v_Sucesor.m_getSucesor())){
-                                    v_Bandera=true;
-                                }
-                            }
-                            
-                            if(v_Bandera){
-                                //Rectificar(q,n,Coste(n,q))
-                                m_Rectificar(v_n, v_Sucesor.m_getSucesor(),v_Sucesor.m_getCosto());
-                            }else{
-                                //Anterior(q)=n
-                                v_Anterior=v_n;
-                                //Coste(inicial,n)
-                                for (int j = 0; j < a_tablaA.size(); j++) {
-                                    v_Regristro=(c_tablaA)a_tablaA.get(j);
-                                    if(v_Anterior.equals(v_Regristro.m_getN())){
-                                        v_CostoN=v_Regristro.m_getCosto();
-                                    }
-                                }
-                                //Coste(Inicial,q)=Coste(Inicial,n)+Coste(n,q);
-                                v_CostoN+=v_Sucesor.m_getCosto();
-                                //Coloca q en la tabla_a
-                                v_Regristro = new c_tablaA(v_Sucesor.m_getSucesor(),v_Anterior,v_CostoN,null);
-                                a_tablaA.add(v_Regristro);
-                                //Abierta=Mezclar(q,Abierta)
-                                a_Abierto.m_insertarCola(v_Sucesor.m_getSucesor());
-                            }
-                            v_Bandera=false;
-                        }
-                        a_Abierto.m_sacarCola();
-                    }else{
-                        a_Abierto.m_vaciaCola();
-                        //Devolver Camino(Inicial,n)
-                    }
-                }while(a_Abierto.m_getRaiz()!=null);    
-            }else{
-                if(!v_bdOrigen)
-                    System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
-                if(!v_bdDestino)
-                    System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
-            }
-        }catch(Exception e){
-            System.out.println(e.toString());
-        }
-        System.out.println("");
-    }
-    
-    private void m_Rectificar(String p_N,String p_P,float p_CostePN){
-        float v_CosteP=0;
-        float v_CosteN=0;
-        float v_Temp;
-        c_tablaA v_Registro;
-        for (int j = 0; j < a_tablaA.size(); j++) {
-            v_Registro=(c_tablaA)a_tablaA.get(j);
-            if(p_P.equals(v_Registro.m_getN())){
-                v_CosteP=v_Registro.m_getCosto();
-            }
-        }
-        for (int j = 0; j < a_tablaA.size(); j++) {
-            v_Registro=(c_tablaA)a_tablaA.get(j);
-            if(p_N.equals(v_Registro.m_getN())){
-                v_CosteN=v_Registro.m_getCosto();
-            }
-        }
-        if((v_CosteP+p_CostePN)<v_CosteN){
-            for (int j = 0; j < a_tablaA.size(); j++) {
-                v_Registro=(c_tablaA)a_tablaA.get(j);
-                if(p_N.equals(v_Registro.m_getN())){
-                    v_Registro.m_setCosto(v_CosteP+p_CostePN);
-                    v_Registro.m_setAnterior(p_P);
-                    a_tablaA.set(j,v_Registro);
-                }
-                //Rectificar Lista;
-            }
-        }
-    }
-    
-    
     private void m_fillGrafo(){
         RandomAccessFile v_Maestro;
         long v_apActual,v_apFinal;
@@ -865,7 +716,6 @@ public class c_ruta {
             System.out.println("\u001B[31mError: No se pudo abrir el archivo maestro\u001B[30m");
         }
     }
-    
     
     private void m_fillG(){
         a_G=null;
@@ -950,4 +800,194 @@ public class c_ruta {
         }
         return v_Costo;
     }   
+    
+    private void m_busquedaGrafoO(int p_Index){
+        StringBuffer v_Origen,v_Destino;
+        c_eliminados v_Eliminados;
+        List v_Sucesores=null;
+        a_tablaA = new ArrayList();
+        c_tablaA v_Regristro;
+        boolean v_Bandera=false;
+        String v_n,v_Anterior=null;
+        float v_CostoN=0;
+        Scanner v_Entrada;
+        m_fillGrafo();
+        m_fillG();
+        try{
+            v_Entrada=new Scanner(System.in);
+            System.out.print("\nSucursal de Origen: ");
+            a_Origen=v_Entrada.next();
+            v_Origen=new StringBuffer(a_Origen);
+            v_Origen.setLength(17);
+            System.out.print("Sucursal de Destino: ");
+            a_Destino=v_Entrada.next();
+            v_Destino=new StringBuffer(a_Destino);
+            v_Destino.setLength(17);
+            boolean v_bdOrigen=false;
+            boolean v_bdDestino=false;
+            v_Eliminados = new c_eliminados();
+            if(v_Eliminados.m_buscaEliminado(v_Origen.toString()))
+                for (int i = 0; i < a_G.length; i++) {
+                    if(a_G[i].equals(v_Origen.toString()))
+                        v_bdOrigen=true;
+                }
+            if(v_Eliminados.m_buscaEliminado(v_Destino.toString()))
+                for (int i = 0; i < a_G.length; i++) {
+                    if(a_G[i].equals(v_Destino.toString()))
+                        v_bdDestino=true;
+                }
+            if(v_bdOrigen&&v_bdDestino){
+                //Inicialización
+                a_Abierto=new c_cola();
+                // Abierta= (inicial)
+                a_Abierto.m_insertarCola(v_Origen.toString());              
+                v_n=a_Abierto.m_getVertice();
+                v_Regristro = new c_tablaA(v_n,v_Anterior,v_CostoN,v_Sucesores);
+                a_tablaA.add(v_Regristro);
+                do{
+                    //n=ExtraerPrimero(Abierta)
+                    v_n=a_Abierto.m_getVertice();
+                    //Si no es el objetivo
+                    if(!v_n.equals(v_Destino.toString())){
+                        //Obtiene los sucesores de n - S=Sucesores(n)
+                        v_Sucesores = new ArrayList();
+                        for (int i = 0; i < a_Grafo.length; i++) {
+                            if(v_n.equals((String)a_Grafo[i][0])){
+                                c_sucesor v_Sucesor=new c_sucesor((String)a_Grafo[i][1],(float)a_Grafo[i][p_Index]);
+                                v_Sucesores.add(v_Sucesor);
+                            }
+                        }
+                        // Añade S a la entrada de n en la tabla_a
+                        for (int i = 0; i < a_tablaA.size(); i++) {
+                            v_Regristro=(c_tablaA)a_tablaA.get(i);
+                            if(v_Regristro.m_getN().equals(v_n)){
+                                v_Regristro.m_setSucesores(v_Sucesores);
+                                a_tablaA.set(i,v_Regristro);
+                            }
+                        }
+                        //Para cada q de S 
+                        for (int i = 0; i < v_Sucesores.size(); i++) {   
+                            // Si q pertenece a tabla_a
+                            c_sucesor v_Sucesor=(c_sucesor)v_Sucesores.get(i);
+                            for (int j = 0; j < a_tablaA.size(); j++) {
+                                v_Regristro=(c_tablaA)a_tablaA.get(j);
+                                if(v_Regristro.m_getN().equals(v_Sucesor.m_getSucesor())){
+                                    v_Bandera=true;
+                                }
+                            }
+                            
+                            if(v_Bandera){
+                                //Rectificar(q,n,Coste(n,q))
+                                String q=v_n;
+                                String n= v_Sucesor.m_getSucesor();
+                                float costoNQ= v_Sucesor.m_getCosto();
+                                m_Rectificar(n,q,costoNQ,3);
+                            }else{
+                                //Anterior(q)=n
+                                v_Anterior=v_n;
+                                //Coste(inicial,n)
+                                for (int j = 0; j < a_tablaA.size(); j++) {
+                                    v_Regristro=(c_tablaA)a_tablaA.get(j);
+                                    if(v_Anterior.equals(v_Regristro.m_getN())){
+                                        v_CostoN=v_Regristro.m_getCosto();
+                                    }
+                                }
+                                //Coste(Inicial,q)=Coste(Inicial,n)+Coste(n,q);
+                                v_CostoN+=v_Sucesor.m_getCosto();
+                                //Coloca q en la tabla_a
+                                v_Regristro = new c_tablaA(v_Sucesor.m_getSucesor(),v_Anterior,v_CostoN,null);
+                                a_tablaA.add(v_Regristro);
+                                //Abierta=Mezclar(q,Abierta)
+                                a_Abierto.m_insertarCola(v_Sucesor.m_getSucesor());
+                            }
+                            v_Bandera=false;
+                        }
+                        a_Abierto.m_sacarCola();
+                    }else{
+                        a_Abierto.m_vaciaCola();
+                        m_imprimeTabla();
+                    }
+                }while(a_Abierto.m_getRaiz()!=null);    
+            }else{
+                if(!v_bdOrigen)
+                    System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
+                if(!v_bdDestino)
+                    System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
+            }
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+        System.out.println("");
+    }
+    
+    private void m_Rectificar(String p_N,String p_P,float p_CostePN,int p_Index){
+        float v_CosteP=0;
+        float v_CosteN=0;
+        float v_Temp;
+        c_tablaA v_Registro;
+        for (int j = 0; j < a_tablaA.size(); j++) {
+            v_Registro=(c_tablaA)a_tablaA.get(j);
+            if(p_P.equals(v_Registro.m_getN())){
+                v_CosteP=v_Registro.m_getCosto();
+            }
+        }
+        for (int j = 0; j < a_tablaA.size(); j++) {
+            v_Registro=(c_tablaA)a_tablaA.get(j);
+            if(p_N.equals(v_Registro.m_getN())){
+                v_CosteN=v_Registro.m_getCosto();
+            }
+        }
+        if((v_CosteP+p_CostePN)<v_CosteN){
+            for (int j = 0; j < a_tablaA.size(); j++) {
+                v_Registro=(c_tablaA)a_tablaA.get(j);
+                if(p_N.equals(v_Registro.m_getN())){
+                    v_Registro.m_setCosto(v_CosteP+p_CostePN);
+                    v_Registro.m_setAnterior(p_P);
+                    a_tablaA.set(j,v_Registro);
+                }
+            }
+            m_rectificarLista(p_P,p_Index);
+        }
+    }
+    
+    private void m_rectificarLista(String p_N,int p_Index){
+        List v_Sucesores = new ArrayList();
+        c_tablaA v_Registro;
+        String v_n=p_N;
+        for (int j = 0; j < a_tablaA.size(); j++) {
+            v_Registro=(c_tablaA)a_tablaA.get(j);
+            if(p_N.equals(v_Registro.m_getN())){
+                v_Sucesores=v_Registro.m_getSucesores();
+            }
+        }
+        for (int i = 0; i < v_Sucesores.size(); i++) {
+            c_sucesor v_Sucesor = (c_sucesor) v_Sucesores.get(i);
+            m_Rectificar(p_N, v_Sucesor.m_getSucesor(),v_Sucesor.m_getCosto(),p_Index);
+        }
+    }
+    
+    private void m_imprimeTabla(){
+        c_tablaA v_Registro;
+        List v_Sucesores;
+        c_sucesor v_Sucesor;
+        System.out.print("\nn\t");
+        System.out.print("Anterior\t");
+        System.out.print("Costo\t");
+        System.out.println("Sucesores");
+        for (int i = 0; i < a_tablaA.size(); i++) {
+            v_Registro=(c_tablaA) a_tablaA.get(i);
+            System.out.print(v_Registro.m_getN()+" ");
+            System.out.print(v_Registro.m_getAnterior()+" ");
+            System.out.print(v_Registro.m_getCosto()+" ");
+            v_Sucesores=v_Registro.m_getSucesores();
+            for (int j = 0; j < v_Sucesores.size(); j++) {
+                v_Sucesor=(c_sucesor)v_Sucesores.get(j);
+                if(j>0){
+                    System.out.println("\t\t\t"+v_Sucesor.m_getSucesor()+":"+v_Sucesor.m_getCosto());
+                }else{
+                    System.out.println(v_Sucesor.m_getSucesor()+":"+v_Sucesor.m_getCosto());
+                }
+            }
+        }
+    }
 }
