@@ -1118,7 +1118,7 @@ public class c_ruta {
         }
         for (int i = 0; i < v_Sucesores.size(); i++) {
             c_sucesor v_Sucesor = (c_sucesor) v_Sucesores.get(i);
-            m_Rectificar(p_N, v_Sucesor.m_getSucesor(),v_Sucesor.m_getCosto(),p_Index);
+            m_Rectificar(v_Sucesor.m_getSucesor(),p_N,v_Sucesor.m_getCosto(),p_Index);
         }
     }// Fin del método m_rectificarLista
     
