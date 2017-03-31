@@ -105,7 +105,7 @@ public class c_ruta {
                 break;
             }
             case 8:{
-                m_MenuGrafoO();
+                m_menuGrafoO();
                 break;
             }
         }
@@ -234,6 +234,11 @@ public class c_ruta {
         }
     }// Fin del método m_leeSecuencial
     
+    /**
+     * @name: m_Arbol
+     * @description: Método para ingresar los registros del archivo indice en un arbo 
+     * para la busqueda secuencial indexada
+     */
     private void m_Arbol(){
         a_Indice = new c_arbol();
         RandomAccessFile v_Indice;
@@ -255,8 +260,13 @@ public class c_ruta {
         }catch(Exception e){
             System.out.println("Error: No se pudo abrir el archivo");
         }
-    }
+    }//Fin del método m_Arbol
     
+    /**
+     * @name: m_leeAleatorio
+     * @description: Metodo para buscar un registro del archivo maestro de manera
+     * aleatoria mediante busqueda secuencial indexada
+     */
     private void m_leeAleatorio(){
         int v_Posicion;
         String v_Opcion="1";
@@ -320,8 +330,13 @@ public class c_ruta {
         }catch(Exception e){
             
         }
-    }
+    }//Fin del método m_leeAleatorio
     
+    /**
+     * @name: m_Modifica
+     * @description: Método para modificar un registro del archivo maestro ubicando
+     * el registro mediante busqueda secuencial indexada
+     */
     private void m_Modifica(){        
         int v_Posicion;
         String v_Opcion="1";
@@ -383,8 +398,13 @@ public class c_ruta {
         }catch(Exception e){
             
         }
-    }//Fin del Método
+    }//Fin del método m_Modifica
     
+    
+    /**
+     * @name: m_Elimina
+     * @description: Metodo para eliminar un registro del archivo maestro marcando el registro
+     */
     private void m_Elimina(){
         int v_Posicion;
         String v_Opcion="1";
@@ -421,8 +441,13 @@ public class c_ruta {
                 }
             }while("1".equals(v_Opcion));
         }
-    }  
+    }// Fin del método m_Elimina
     
+    /**
+     * @name: m_eliminaNodo
+     * @description: Metodo para eliminar un nodo del archivo maestro, marcando todos los registros
+     * que esten asociados al nodo
+     */
     private void m_eliminaNodo(){
         c_eliminados v_Eliminados;
         RandomAccessFile v_Maestro = null,v_Indice=null;
@@ -511,76 +536,96 @@ public class c_ruta {
             v_Maestro.close();
             v_Indice.close();
         }catch(Exception e){}
-    }
+    }//Fin del método m_eliminaNodo
     
+    /**
+     * @name: m_busquedaAnchura
+     * @description: Metodo para buscar por método de anchura la mejor ruta por zona
+     */
     private void m_busquedaAnchura(){
         StringBuffer v_Origen,v_Destino;
         c_eliminados v_Eliminados;
         Scanner v_Entrada;        
-        m_fillGrafo();
+        //Sea G un grafo conexo con los vertices de G ordenados
+        m_fillGrafo();         
         m_fillG();
         if(a_G!=null){
             try{
                 v_Entrada=new Scanner(System.in);
-                
+                //Nodo Origen
                 System.out.print("\nSucursal de Origen: ");
                 a_Origen=v_Entrada.next();
                 v_Origen=new StringBuffer(a_Origen);
                 v_Origen.setLength(17);
-
+                //Nodo Destino
                 System.out.print("Sucursal de Destino: ");
                 a_Destino=v_Entrada.next();
                 v_Destino=new StringBuffer(a_Destino);
                 v_Destino.setLength(17);
-                
+                //Validacion de nodos de origen y destino
                 boolean v_bdOrigen=false;
                 boolean v_bdDestino=false;
                 v_Eliminados = new c_eliminados();
-                
                 if(v_Eliminados.m_buscaEliminado(v_Origen.toString()))
                     for (int i = 0; i < a_G.length; i++) {
                         if(a_G[i].equals(v_Origen.toString()))
                             v_bdOrigen=true;
                     }
-                
                 if(v_Eliminados.m_buscaEliminado(v_Destino.toString()))
                     for (int i = 0; i < a_G.length; i++) {
                         if(a_G[i].equals(v_Destino.toString()))
                             v_bdDestino=true;
                     }
-                
+                //Si los nodos de origen y destino son validos
                 if(v_bdOrigen&&v_bdDestino){
+                    //Sea T el subgrafo formado por V1(Raiz)
                     a_arbolT=new c_arbolT(v_Origen.toString(),0,0);
+                    //Asuma S<-(Vi)
                     a_colaS=new c_cola();
                     a_colaS.m_insertarCola(v_Origen.toString());
+                    //Origen igual a destino
                     if(v_Origen.equals(v_Destino)){
                         a_colaS.m_vaciaCola();
                     }
+                    //Origen diferente del destino
                     if(!v_Origen.equals(v_Destino)){
                         do{
+                            //Para todo x elemento de S
                             String X=a_colaS.m_getVertice();
+                            //Para todo y elemento de G
                             for (int i = 0; i < a_G.length; i++) {
                                 String Y=a_G[i];
+                                // (X,Y) esta en G y (X,Y) no forme un circuito en T
                                 if(m_buscaGrafo(X,Y)&&a_arbolT.m_buscaArbol(Y)){
+                                    //Añadir (X,Y) a T
                                     a_arbolT.m_insertaArbol(X,Y,m_buscaCosto(X,Y,2),m_buscaCosto(X,Y,3));
+                                    //Añadir los hijos de S en T
                                     a_colaS.m_insertarCola(Y);
+                                    //Si Y igual al destino parar
                                     if(Y.equals(v_Destino.toString())){
                                         i = a_G.length;
                                         a_colaS.m_vaciaCola();
                                     }
                                 }
                             }
+                            //Si todavia hay elementos en la cola sacar uno
                             if(a_colaS.m_getRaiz()!=null){
                                 a_colaS.m_sacarCola();
                             }
+                        //Si no se pueden agregar mas lados (X,Y) termine
                         }while(a_colaS.m_getRaiz()!=null);    
                     }
+                    //Imprime el arbol generador T
                     a_arbolT.m_imprimeArbol();
+                    //Imprime el camino del origen al destino
                     a_arbolT.m_imprimeCamino(v_Destino.toString());
+                    //Imprime los costos
                     a_arbolT.m_imprimeCosto(v_Destino.toString());
                 }else{
+                    //Si el origen no es valido
                     if(!v_bdOrigen)
                         System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
+                    //Si el destino no es valido
                     if(!v_bdDestino)
                         System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
                 }
@@ -588,28 +633,33 @@ public class c_ruta {
                 System.out.println(e.toString());
             }
         }
-    }
+    }//Fin del método m_busquedaAnchura
     
+    /**
+     * @name: m_busquedaProfundidad
+     * @description: Metodo para buscar por método de profundad la mejor ruta por ruta
+     */
     private void m_busquedaProfundidad(){
         StringBuffer v_Origen,v_Destino;
         c_eliminados v_Eliminados;
         Scanner v_Entrada;        
+        //Sea G un grafo conexo con los vertices de G ordenados
         m_fillGrafo();
         m_fillG();
         if(a_G!=null){
             try{
                 v_Entrada=new Scanner(System.in);
-                
+                // Nodo de Origen
                 System.out.print("\nSucursal de Origen: ");
                 a_Origen=v_Entrada.next();
                 v_Origen=new StringBuffer(a_Origen);
                 v_Origen.setLength(17);
-
+                // Nodo de Destino
                 System.out.print("Sucursal de Destino: ");
                 a_Destino=v_Entrada.next();
                 v_Destino=new StringBuffer(a_Destino);
                 v_Destino.setLength(17);
-                
+                //Validacion de nodos de origen y destino
                 boolean v_bdOrigen=false;
                 boolean v_bdDestino=false;
                 v_Eliminados = new c_eliminados();
@@ -624,35 +674,50 @@ public class c_ruta {
                             v_bdDestino=true;
                     }
                 if(v_bdOrigen&&v_bdDestino){
+                    //Sea T el subgrafo formado por V1(Raiz)
                     a_arbolT=new c_arbolT(v_Origen.toString(),0,0);
+                    //Asuma W<-(V1)
                     a_pilaW=new c_pila();
                     a_pilaW.m_insertaPila(v_Origen.toString());
+                    //Origen diferente del destino
                     if(!v_Origen.equals(v_Destino)){
                         do{
                             for (int i = 0; i < a_G.length; i++) {
-                                String X=a_pilaW.m_getVertice();
-                                String Y=a_G[i];
-                                if(m_buscaGrafo(X,Y)&&a_arbolT.m_buscaArbol(Y)){
-                                    a_arbolT.m_insertaArbol(X,Y,m_buscaCosto(X,Y,2),m_buscaCosto(X,Y,3));
-                                    a_pilaW.m_insertaPila(Y);
+                                //Tomese el lado (W,K) con K mínimo
+                                String W=a_pilaW.m_getVertice();
+                                String K=a_G[i];
+                                // (W,K) esta en G y (W,K) no forme un circuito en T
+                                if(m_buscaGrafo(W,K)&&a_arbolT.m_buscaArbol(K)){
+                                    // Agregar (W,K) a T
+                                    a_arbolT.m_insertaArbol(W,K,m_buscaCosto(W,K,2),m_buscaCosto(W,K,3));
+                                    //Tomese W<-K
+                                    a_pilaW.m_insertaPila(K);
                                     i=-1;
-                                    if(Y.equals(v_Destino.toString())){
+                                    //Si K igual al destino parar
+                                    if(K.equals(v_Destino.toString())){
                                         i = a_G.length;
                                         a_pilaW.m_vaciaPila();
                                     }
                                 }
                             }
+                            //Si todavia hay elementos en la pila sacar uno
                             if(a_pilaW.m_getRaiz()!=null){
                                 a_pilaW.m_sacaPila();
                             }
+                            //Si no se pueden agregar mas lados (X,Y) termine
                         }while(a_pilaW.m_getRaiz()!=null);
                     }
+                    //Imprime el arbol generador T
                     a_arbolT.m_imprimeArbol();
+                    //Imprime el camino del origen al destino
                     a_arbolT.m_imprimeCamino(v_Destino.toString());
+                    //Imprime los costos
                     a_arbolT.m_imprimeCosto(v_Destino.toString());
                 }else{
+                    //Si el origen no es valido
                     if(!v_bdOrigen)
                         System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
+                    //Si el destino no es valido
                     if(!v_bdDestino)
                         System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
                 }
@@ -660,8 +725,12 @@ public class c_ruta {
                 System.out.println(e.toString());
             }
         }
-    }
+    }// Fin del metodo m_busquedaProfundidad
     
+    /**
+     * @name: m_fillGrafo
+     * @description: Metodo llenar el grafo con los registros del archivo maestro
+     */
     private void m_fillGrafo(){
         RandomAccessFile v_Maestro;
         long v_apActual,v_apFinal;
@@ -716,8 +785,12 @@ public class c_ruta {
         }catch(Exception e){
             System.out.println("\u001B[31mError: No se pudo abrir el archivo maestro\u001B[30m");
         }
-    }
+    }// Fin del método m_fillGrafo
     
+    /**
+     * @name: m_fillG
+     * @description: Metodo llenar G con los registros del archivo maestro
+     */
     private void m_fillG(){
         a_G=null;
         String v_Anterior="";
@@ -776,8 +849,15 @@ public class c_ruta {
         }catch(Exception e){
             System.out.println("\u001B[31mError: No se pudo abrir el archivo maestro\u001B[30m");
         }
-    }
+    }// Fin del método m_fillG
     
+    /**
+     * @name: m_buscaGrafo
+     * @description: Metodo para buscar (X,Y) en el grafo
+     * @param p_X : Nodo origen
+     * @param p_Y : Nodo destino
+     * @return Verdadero si se encuentra en el grafo
+     */
     private boolean m_buscaGrafo(String p_X,String p_Y){
         boolean v_Bandera=false;
         String v_X,v_Y;
@@ -788,8 +868,16 @@ public class c_ruta {
                 v_Bandera=true;
         }
         return v_Bandera;
-    }   
+    }// Fin del método buscaGrafo
     
+    /**
+     * @name: m_buscaCosto
+     * @description: Metodo para obtener los costos del grafo
+     * @param p_X : Nodo origen
+     * @param p_Y : Nodo destino
+     * @param p_Indice : Direccion de los costos
+     * @return Costo
+     */
     private float m_buscaCosto(String p_X,String p_Y,int p_Indice){
         float v_Costo=0;
         String v_X,v_Y;
@@ -802,7 +890,11 @@ public class c_ruta {
         return v_Costo;
     }   
     
-    private void m_MenuGrafoO(){
+    /**
+     * @name: m_menuGrafoO
+     * @description: Menu se seleccion para el metodo de busqueda de GrafoO
+     */
+    private void m_menuGrafoO(){
         Scanner v_Entrada;
         boolean v_Bandera=true;
         int v_Opcion=0;
@@ -826,6 +918,12 @@ public class c_ruta {
         }while(v_Bandera);
     }
     
+    /**
+     * @name: m_opcionGrafoO
+     * @description: Metodo que ingresa la opcion elegida en el menu de busqueda
+     * GrafoO
+     * @param p_Opcion Direccion del Costo
+     */
     private void m_opcionGrafoO(int p_Opcion){
         switch(p_Opcion){
             case 1:{
@@ -839,6 +937,11 @@ public class c_ruta {
         }
     } // Fin del método m_Opcion
     
+    /**
+     * @name: m_busquedaGrafoO
+     * @description: Metodo para buscar el camino mas corto por Grafo O
+     * @param p_Index Direccion del costo
+     */
     private void m_busquedaGrafoO(int p_Index){
         StringBuffer v_Origen,v_Destino;
         c_eliminados v_Eliminados;
@@ -943,7 +1046,7 @@ public class c_ruta {
                         a_Abierto.m_sacarCola();
                     }else{
                         a_Abierto.m_vaciaCola();
-                        m_imprimeTabla();
+                        m_imprimeTablaA();
                         m_imprimeCaminoTablaA(v_Destino.toString());
                     }
                 }while(a_Abierto.m_getRaiz()!=null);    
@@ -957,8 +1060,16 @@ public class c_ruta {
             System.out.println(e.toString());
         }
         System.out.println("");
-    }
+    }// Fin del método m_GrafoO
     
+    /**
+     * @name: m_Rectificar
+     * @description: Metodo rectificar los costos de n
+     * @param p_N  : n
+     * @param p_P  : q
+     * @param p_CostePN : Coste(n,q)
+     * @param p_Index : Direccion del costo
+     */
     private void m_Rectificar(String p_N,String p_P,float p_CostePN,int p_Index){
         float v_CosteP=0;
         float v_CosteN=0;
@@ -987,8 +1098,14 @@ public class c_ruta {
             }
             m_rectificarLista(p_P,p_Index);
         }
-    }
+    }// Fin del método m_Rectificar
     
+    /**
+     * @name: m_rectificarLista
+     * @description: Metodo rectificar los costos modificados
+     * @param p_N : n
+     * @param p_Index : Direccion del costo 
+     */
     private void m_rectificarLista(String p_N,int p_Index){
         List v_Sucesores = new ArrayList();
         c_tablaA v_Registro;
@@ -1003,9 +1120,13 @@ public class c_ruta {
             c_sucesor v_Sucesor = (c_sucesor) v_Sucesores.get(i);
             m_Rectificar(p_N, v_Sucesor.m_getSucesor(),v_Sucesor.m_getCosto(),p_Index);
         }
-    }
+    }// Fin del método m_rectificarLista
     
-    private void m_imprimeTabla(){
+    /**
+     * @name: m_imprimeTablaA
+     * @description: Metodo para imprimir la TablaA
+     */
+    private void m_imprimeTablaA(){
         c_eliminados v_Eliminado = new c_eliminados();
         c_tablaA v_Registro;
         List v_Sucesores;
@@ -1033,8 +1154,13 @@ public class c_ruta {
                 System.out.println("");
             }
         }
-    }
+    }// Fin del método m_imprimeTablaA
     
+    /**
+     * @name: m_imprimeCaminoTablaA
+     * @description: Metodo para imprimir el camino y coste del nodo inicial al destino
+     * @param p_Destino : Nodo destino
+     */
     private void m_imprimeCaminoTablaA(String p_Destino){
         System.out.println("\n"+m_imprimeCaminoTabla(p_Destino));
         c_tablaA v_Registro;
@@ -1044,8 +1170,14 @@ public class c_ruta {
                 System.out.println("Costo: \u001B[31m"+v_Registro.m_getCosto()+"\u001B[30m");
             }
         }
-    }
+    }// Fin del m_imprimeCaminoTablaA
     
+    /**
+     * @name: m_imprimeCaminoTabla
+     * @description: Metodo recursivo para recuperar el camino del nodo inicial al destino
+     * @param p_Destino : Nodo destino
+     * @return Cadena con el recorrido del nodo origen al destino
+     */
     private String m_imprimeCaminoTabla(String p_Destino){
         c_eliminados v_Eliminado = new c_eliminados();
         String v_Camino="";
