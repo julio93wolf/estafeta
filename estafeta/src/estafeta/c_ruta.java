@@ -105,7 +105,7 @@ public class c_ruta {
                 break;
             }
             case 8:{
-                m_busquedaGrafoO(3);
+                m_MenuGrafoO();
                 break;
             }
         }
@@ -801,6 +801,43 @@ public class c_ruta {
         return v_Costo;
     }   
     
+    private void m_MenuGrafoO(){
+        Scanner v_Entrada;
+        boolean v_Bandera=true;
+        int v_Opcion=0;
+        do{
+            try{
+                v_Entrada=new Scanner(System.in);
+                System.out.println("\n");
+                System.out.println("\u001B[34m[1]\u001B[30m Menor Costo_1");
+                System.out.println("\u001B[34m[2]\u001B[30m Menor Costo_2");
+                System.out.print("Opción: ");
+                v_Opcion=v_Entrada.nextInt();
+                if(v_Opcion>0&&v_Opcion<3){
+                    m_opcionGrafoO(v_Opcion);
+                    v_Bandera=false;
+                }
+                else
+                    System.out.println("\u001B[31mError: Valor fuera de rango\u001B[30m");
+            }catch(Exception e){
+                System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
+            }
+        }while(v_Bandera);
+    }
+    
+    private void m_opcionGrafoO(int p_Opcion){
+        switch(p_Opcion){
+            case 1:{
+                m_busquedaGrafoO(2);
+                break;
+            }
+            case 2:{
+                m_busquedaGrafoO(3);
+                break;
+            }
+        }
+    } // Fin del método m_Opcion
+    
     private void m_busquedaGrafoO(int p_Index){
         StringBuffer v_Origen,v_Destino;
         c_eliminados v_Eliminados;
@@ -906,6 +943,7 @@ public class c_ruta {
                     }else{
                         a_Abierto.m_vaciaCola();
                         m_imprimeTabla();
+                        m_imprimeCaminoTablaA(v_Destino.toString());
                     }
                 }while(a_Abierto.m_getRaiz()!=null);    
             }else{
@@ -967,27 +1005,61 @@ public class c_ruta {
     }
     
     private void m_imprimeTabla(){
+        c_eliminados v_Eliminado = new c_eliminados();
         c_tablaA v_Registro;
         List v_Sucesores;
         c_sucesor v_Sucesor;
-        System.out.print("\nn\t");
+        System.out.print("\nN\t");
         System.out.print("Anterior\t");
-        System.out.print("Costo\t");
-        System.out.println("Sucesores");
+        System.out.print("Costo\t\t");
+        System.out.println("Sucesores\n");
         for (int i = 0; i < a_tablaA.size(); i++) {
             v_Registro=(c_tablaA) a_tablaA.get(i);
-            System.out.print(v_Registro.m_getN()+" ");
-            System.out.print(v_Registro.m_getAnterior()+" ");
-            System.out.print(v_Registro.m_getCosto()+" ");
-            v_Sucesores=v_Registro.m_getSucesores();
-            for (int j = 0; j < v_Sucesores.size(); j++) {
-                v_Sucesor=(c_sucesor)v_Sucesores.get(j);
-                if(j>0){
-                    System.out.println("\t\t\t"+v_Sucesor.m_getSucesor()+":"+v_Sucesor.m_getCosto());
+            System.out.print("\u001B[31m"+v_Eliminado.m_buscaNodo(v_Registro.m_getN())+"\t");
+            System.out.print("\u001B[34m"+v_Eliminado.m_buscaNodo(v_Registro.m_getAnterior())+"\t\t");
+            System.out.print("\u001B[30m"+v_Registro.m_getCosto()+"\t\t");
+            if(v_Registro.m_getSucesores()!=null){
+                v_Sucesores=v_Registro.m_getSucesores();
+                for (int j = 0; j < v_Sucesores.size(); j++) {
+                    v_Sucesor=(c_sucesor)v_Sucesores.get(j);
+                    if(j>0){
+                        System.out.println("\t\t\t\t\t\u001B[31m"+v_Eliminado.m_buscaNodo(v_Sucesor.m_getSucesor())+"\u001B[30m:\u001B[34m"+v_Sucesor.m_getCosto()+"\u001B[30m");
+                    }else{
+                        System.out.println("\u001B[31m"+v_Eliminado.m_buscaNodo(v_Sucesor.m_getSucesor())+"\u001B[30m:\u001B[34m"+v_Sucesor.m_getCosto()+"\u001B[30m");
+                    }
+                }
+            }else{
+                System.out.println("");
+            }
+        }
+    }
+    
+    private void m_imprimeCaminoTablaA(String p_Destino){
+        System.out.println("\n"+m_imprimeCaminoTabla(p_Destino));
+        c_tablaA v_Registro;
+        for (int i = 0; i < a_tablaA.size(); i++) {
+            v_Registro=(c_tablaA) a_tablaA.get(i);
+            if(v_Registro.m_getN().equals(p_Destino)){
+                System.out.println("Costo: \u001B[31m"+v_Registro.m_getCosto()+"\u001B[30m");
+            }
+        }
+    }
+    
+    private String m_imprimeCaminoTabla(String p_Destino){
+        c_eliminados v_Eliminado = new c_eliminados();
+        String v_Camino="";
+        c_tablaA v_Registro;
+        for (int i = 0; i < a_tablaA.size(); i++) {
+            v_Registro=(c_tablaA) a_tablaA.get(i);
+            if(v_Registro.m_getN().equals(p_Destino)){
+                if(v_Registro.m_getAnterior()!=null){
+                    v_Camino=m_imprimeCaminoTabla(v_Registro.m_getAnterior());
+                    v_Camino=v_Camino+" ⇒ \u001B[34m"+v_Eliminado.m_buscaNodo(v_Registro.m_getN())+"\u001B[30m";
                 }else{
-                    System.out.println(v_Sucesor.m_getSucesor()+":"+v_Sucesor.m_getCosto());
+                    v_Camino="\u001B[34m"+v_Registro.m_getN()+"\u001B[30m";
                 }
             }
         }
+        return v_Camino;
     }
 }
