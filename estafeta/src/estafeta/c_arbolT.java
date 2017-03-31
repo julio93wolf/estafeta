@@ -114,7 +114,7 @@ public class c_arbolT {
                 c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
                 v_costoTemporal=m_imprimeCosto1(v_Hijo, p_Objetivo, v_Costo);
                 if(v_Hijo.m_getVertice().equals(p_Objetivo)){
-                    System.out.println("\n Costo_1: \u001B[31m"+v_costoTemporal+"\u001B[30m");
+                    System.out.println("\nCosto_1: \u001B[31m"+v_costoTemporal+"\u001B[30m");
                 }
             }
         return v_Costo;
@@ -131,7 +131,7 @@ public class c_arbolT {
                 c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
                 v_costoTemporal=m_imprimeCosto2(v_Hijo, p_Objetivo, v_Costo);
                 if(v_Hijo.m_getVertice().equals(p_Objetivo)){
-                    System.out.println("\n Costo_3: \u001B[31m"+v_costoTemporal+"\u001B[30m");
+                    System.out.println("Costo_2: \u001B[31m"+v_costoTemporal+"\u001B[30m");
                 }
             }
         return v_Costo;
