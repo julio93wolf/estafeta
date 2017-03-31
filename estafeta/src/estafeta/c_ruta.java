@@ -193,8 +193,8 @@ public class c_ruta {
         System.out.print("No.\t");
         System.out.print("Origen\t");
         System.out.print("Destino\t");
-        System.out.print("Distancia\t");
-        System.out.println("Tiempo");
+        System.out.print("Costo_1\t");
+        System.out.println("Costo_2");
         try{
             v_Maestro = new RandomAccessFile("src/files/maestro.dat","r");
             v_apActual=v_Maestro.getFilePointer();
@@ -223,7 +223,7 @@ public class c_ruta {
                     System.out.print("\u001B[31m"+a_Llave+"\u001B[30m\t");
                     System.out.print("\u001B[34m"+a_Origen+"\u001B[30m\t");
                     System.out.print("\u001B[34m"+a_Destino+"\u001B[30m\t");
-                    System.out.print(a_Costo1+"\t\t");
+                    System.out.print(a_Costo1+"\t");
                     System.out.print(a_Costo2+"\n");
                 }
                 v_apActual=v_Maestro.getFilePointer();
@@ -281,8 +281,8 @@ public class c_ruta {
                         System.out.print("\nNo.\t");
                         System.out.print("Origen\t");
                         System.out.print("Destino\t");
-                        System.out.print("Distancia\t");
-                        System.out.println("Tiempo");
+                        System.out.print("Costo_1\t");
+                        System.out.println("Costo_2");
                         
                         a_Llave=v_Maestro.readInt();
                         
@@ -303,7 +303,7 @@ public class c_ruta {
                         System.out.print("\u001B[31m"+a_Llave+"\u001B[30m\t");
                         System.out.print("\u001B[34m"+a_Origen+"\u001B[30m\t");
                         System.out.print("\u001B[34m"+a_Destino+"\u001B[30m\t");
-                        System.out.print(a_Costo1+"\t\t");
+                        System.out.print(a_Costo1+"\t");
                         System.out.print(a_Costo2+"\n");
                     }
                     System.out.println("\n\u001B[31m¿Desea buscar otra ruta?\u001B[30m");
@@ -411,6 +411,7 @@ public class c_ruta {
                         v_Indice.seek(a_Indice.m_buscaRegIndice(v_Posicion));
                         v_Indice.writeInt(-1);
                     }
+                    System.out.println("\n\u001B[31mNodo Eliminado!\u001B[30m\n");
                     System.out.println("\n\u001B[31m¿Desea eliminar otra ruta?\u001B[30m");
                     System.out.println("\u001B[34m[Si]\u001B[30m=1\n\u001B[34m[No]\u001B[30m=Cualquier tecla");
                     System.out.print("Opcion: ");
