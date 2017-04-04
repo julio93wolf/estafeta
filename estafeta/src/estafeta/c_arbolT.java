@@ -71,69 +71,32 @@ public class c_arbolT {
             m_imprimeArbol(v_Hijo,v_Tabulacion+1);
         }
     }
-    
-    public void m_imprimeCamino(String p_Objetivo){
-        String v_Camino="";
+            
+    public void m_imprimeCosto(){
         c_nodoT v_Raiz=a_Raiz;
-        v_Camino=m_imprimeCamino(v_Raiz, p_Objetivo,v_Camino);
+        System.out.println("\nCosto_1: "+m_imprimeCosto1(v_Raiz));
+        System.out.println("Costo_2: "+m_imprimeCosto2(v_Raiz));
     }
     
-    private String m_imprimeCamino(c_nodoT p_Raiz,String p_Objetivo,String p_Camino){
-        c_eliminados v_Eliminado = new c_eliminados();
+    private float m_imprimeCosto1(c_nodoT p_Raiz){
         c_nodoT v_Raiz = p_Raiz;
-        String v_Camino=p_Camino;
-        String v_caminoTemporal;
-        String v_Vertice=v_Raiz.m_getVertice();
-        v_Camino=v_Camino+"\u001B[34m"+v_Eliminado.m_buscaNodo(v_Vertice)+"\u001B[30m";
-        if(!v_Vertice.equals(p_Objetivo))
-            v_Camino=v_Camino+" ⇒ ";
-            for (int i = 0; i < v_Raiz.m_getHijos(); i++) {
-                c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
-                v_caminoTemporal=m_imprimeCamino(v_Hijo, p_Objetivo, v_Camino);
-                if(v_caminoTemporal.endsWith(" ⇒ \u001B[34m"+p_Objetivo+"\u001B[30m")){
-                    System.out.println("\n"+v_caminoTemporal);
-                }
-            }
-        return v_Camino;
-    }
-    
-    public void m_imprimeCosto(String p_Objetivo){
-        c_nodoT v_Raiz=a_Raiz;
-        m_imprimeCosto1(v_Raiz,p_Objetivo,0);
-        m_imprimeCosto2(v_Raiz,p_Objetivo,0);
-    }
-    
-    private float m_imprimeCosto1(c_nodoT p_Raiz,String p_Objetivo,float p_Costo){
-        c_nodoT v_Raiz = p_Raiz;
-        float v_Costo=p_Costo;
-        float v_costoTemporal;
-        String v_Vertice=v_Raiz.m_getVertice();
+        float v_Costo=0;
         v_Costo+=v_Raiz.m_getCosto1();
-        if(!v_Vertice.equals(p_Objetivo))
-            for (int i = 0; i < v_Raiz.m_getHijos(); i++) {
-                c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
-                v_costoTemporal=m_imprimeCosto1(v_Hijo, p_Objetivo, v_Costo);
-                if(v_Hijo.m_getVertice().equals(p_Objetivo)){
-                    System.out.println("\nCosto_1: \u001B[31m"+v_costoTemporal+"\u001B[30m");
-                }
-            }
+        for (int i = 0; i < v_Raiz.m_getHijos(); i++) {
+            c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
+            v_Costo+=m_imprimeCosto1(v_Hijo);
+        }
         return v_Costo;
     }
     
-    private float m_imprimeCosto2(c_nodoT p_Raiz,String p_Objetivo,float p_Costo){
+    private float m_imprimeCosto2(c_nodoT p_Raiz){
         c_nodoT v_Raiz = p_Raiz;
-        float v_Costo=p_Costo;
-        float v_costoTemporal;
-        String v_Vertice=v_Raiz.m_getVertice();
+        float v_Costo=0;
         v_Costo+=v_Raiz.m_getCosto2();
-        if(!v_Vertice.equals(p_Objetivo))
-            for (int i = 0; i < v_Raiz.m_getHijos(); i++) {
-                c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
-                v_costoTemporal=m_imprimeCosto2(v_Hijo, p_Objetivo, v_Costo);
-                if(v_Hijo.m_getVertice().equals(p_Objetivo)){
-                    System.out.println("Costo_2: \u001B[31m"+v_costoTemporal+"\u001B[30m");
-                }
-            }
+        for (int i = 0; i < v_Raiz.m_getHijos(); i++) {
+            c_nodoT v_Hijo=v_Raiz.m_getHijo(i);
+            v_Costo+=m_imprimeCosto2(v_Hijo);
+        }
         return v_Costo;
     }
 }
