@@ -18,8 +18,11 @@ public class c_busqInformada {
     private List a_Abierto=null;
     private StringBuffer a_sbOrigen,a_sbDestino;
 
-    private void m_busquedaA(){
-        String a_EA;
+    private void m_busquedaA(int p_Index){
+        String v_EA;
+        List v_Sucesores;
+        c_sucesor v_Sucesor;
+        c_abierto v_Registro=null;
         boolean v_bdOrigen=false;
         boolean v_bdDestino=false;
         c_eliminados v_Eliminados;
@@ -48,8 +51,23 @@ public class c_busqInformada {
                 }
             if(v_bdOrigen&&v_bdDestino){
                 a_Abierto=new ArrayList();
-                c_Abierto v_Registro = new c_Abierto(a_sbOrigen.toString(),null,0,0);
-                
+                v_Registro = new c_abierto(a_sbOrigen.toString(),null,0,0);
+                a_Abierto.add(v_Registro);
+                do{
+                    v_Registro=(c_abierto)a_Abierto.get(0);
+                    v_EA=v_Registro.m_getNodo();
+                    v_Sucesores = new ArrayList();
+                    for (int i = 0; i < a_Grafo.length; i++) {
+                        if(v_EA.equals((String)a_Grafo[i][0])){
+                            v_Sucesor=new c_sucesor((String)a_Grafo[i][1],(float)a_Grafo[i][p_Index]);
+                            v_Sucesores.add(v_Sucesor);
+                        }
+                    }
+                    for (int i = 0; i < v_Sucesores.size(); i++) {
+                        v_Sucesor=(c_sucesor)v_Sucesores.get(0);
+                        
+                    }
+                }while(a_Abierto.size()!=0);
             }else{
                 if(!v_bdOrigen)
                     System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
