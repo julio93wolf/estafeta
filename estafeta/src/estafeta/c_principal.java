@@ -10,18 +10,18 @@ import java.util.Scanner;
  * @description: La clase contiene los metodos de ingreso, lectura y busqueda de rutas
  * @version 17.3.3
  */
-public class c_ruta {
+public class c_principal {
       
-    private c_busquedas o_busquedas;
+    private c_busqCiegas o_busquedas;
     private c_rutas o_rutas;
     
     /**
      * @name: c_caminos
      * @description: Constructor de la clase c_grafo
      */
-    c_ruta(){
+    c_principal(){
         o_rutas = new c_rutas();
-        o_busquedas = new c_busquedas();
+        o_busquedas = new c_busqCiegas();
         m_Menu();
     }// Fin del constructor
     

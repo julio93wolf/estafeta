@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class c_busquedas {
+public class c_busqCiegas {
     
     private int a_Llave;
     private String a_Origen;
