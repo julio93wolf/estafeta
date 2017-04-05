@@ -19,7 +19,7 @@ public class c_busqCiegas {
     private c_cola a_colaS;
     private c_cola a_Abierto;
     private c_pila a_pilaW;
-    private List a_tablaA;
+    private List a_tablaO;
 
     /**
      * @name: m_busquedaAnchura
@@ -378,8 +378,8 @@ public class c_busqCiegas {
         StringBuffer v_Origen,v_Destino;
         c_eliminados v_Eliminados;
         List v_Sucesores=null;
-        a_tablaA = new ArrayList();
-        c_tablaA v_Regristro;
+        a_tablaO = new ArrayList();
+        c_tablaO v_Regristro;
         boolean v_Bandera=false;
         String v_n,v_Anterior=null;
         float v_CostoN=0;
@@ -415,8 +415,8 @@ public class c_busqCiegas {
                 // Abierta= (inicial)
                 a_Abierto.m_insertarCola(v_Origen.toString());              
                 v_n=a_Abierto.m_getVertice();
-                v_Regristro = new c_tablaA(v_n,v_Anterior,v_CostoN,v_Sucesores);
-                a_tablaA.add(v_Regristro);
+                v_Regristro = new c_tablaO(v_n,v_Anterior,v_CostoN,v_Sucesores);
+                a_tablaO.add(v_Regristro);
                 do{
                     //n=ExtraerPrimero(Abierta)
                     v_n=a_Abierto.m_getVertice();
@@ -431,19 +431,19 @@ public class c_busqCiegas {
                             }
                         }
                         // Añade S a la entrada de n en la tabla_a
-                        for (int i = 0; i < a_tablaA.size(); i++) {
-                            v_Regristro=(c_tablaA)a_tablaA.get(i);
+                        for (int i = 0; i < a_tablaO.size(); i++) {
+                            v_Regristro=(c_tablaO)a_tablaO.get(i);
                             if(v_Regristro.m_getN().equals(v_n)){
                                 v_Regristro.m_setSucesores(v_Sucesores);
-                                a_tablaA.set(i,v_Regristro);
+                                a_tablaO.set(i,v_Regristro);
                             }
                         }
                         //Para cada q de S 
                         for (int i = 0; i < v_Sucesores.size(); i++) {   
                             // Si q pertenece a tabla_a
                             c_sucesor v_Sucesor=(c_sucesor)v_Sucesores.get(i);
-                            for (int j = 0; j < a_tablaA.size(); j++) {
-                                v_Regristro=(c_tablaA)a_tablaA.get(j);
+                            for (int j = 0; j < a_tablaO.size(); j++) {
+                                v_Regristro=(c_tablaO)a_tablaO.get(j);
                                 if(v_Regristro.m_getN().equals(v_Sucesor.m_getSucesor())){
                                     v_Bandera=true;
                                 }
@@ -459,8 +459,8 @@ public class c_busqCiegas {
                                 //Anterior(q)=n
                                 v_Anterior=v_n;
                                 //Coste(inicial,n)
-                                for (int j = 0; j < a_tablaA.size(); j++) {
-                                    v_Regristro=(c_tablaA)a_tablaA.get(j);
+                                for (int j = 0; j < a_tablaO.size(); j++) {
+                                    v_Regristro=(c_tablaO)a_tablaO.get(j);
                                     if(v_Anterior.equals(v_Regristro.m_getN())){
                                         v_CostoN=v_Regristro.m_getCosto();
                                     }
@@ -468,8 +468,8 @@ public class c_busqCiegas {
                                 //Coste(Inicial,q)=Coste(Inicial,n)+Coste(n,q);
                                 v_CostoN+=v_Sucesor.m_getCosto();
                                 //Coloca q en la tabla_a
-                                v_Regristro = new c_tablaA(v_Sucesor.m_getSucesor(),v_Anterior,v_CostoN,null);
-                                a_tablaA.add(v_Regristro);
+                                v_Regristro = new c_tablaO(v_Sucesor.m_getSucesor(),v_Anterior,v_CostoN,null);
+                                a_tablaO.add(v_Regristro);
                                 //Abierta=Mezclar(q,Abierta)
                                 a_Abierto.m_insertarCola(v_Sucesor.m_getSucesor());
                             }
@@ -506,26 +506,26 @@ public class c_busqCiegas {
         float v_CosteP=0;
         float v_CosteN=0;
         float v_Temp;
-        c_tablaA v_Registro;
-        for (int j = 0; j < a_tablaA.size(); j++) {
-            v_Registro=(c_tablaA)a_tablaA.get(j);
+        c_tablaO v_Registro;
+        for (int j = 0; j < a_tablaO.size(); j++) {
+            v_Registro=(c_tablaO)a_tablaO.get(j);
             if(p_P.equals(v_Registro.m_getN())){
                 v_CosteP=v_Registro.m_getCosto();
             }
         }
-        for (int j = 0; j < a_tablaA.size(); j++) {
-            v_Registro=(c_tablaA)a_tablaA.get(j);
+        for (int j = 0; j < a_tablaO.size(); j++) {
+            v_Registro=(c_tablaO)a_tablaO.get(j);
             if(p_N.equals(v_Registro.m_getN())){
                 v_CosteN=v_Registro.m_getCosto();
             }
         }
         if((v_CosteP+p_CostePN)<v_CosteN){
-            for (int j = 0; j < a_tablaA.size(); j++) {
-                v_Registro=(c_tablaA)a_tablaA.get(j);
+            for (int j = 0; j < a_tablaO.size(); j++) {
+                v_Registro=(c_tablaO)a_tablaO.get(j);
                 if(p_N.equals(v_Registro.m_getN())){
                     v_Registro.m_setCosto(v_CosteP+p_CostePN);
                     v_Registro.m_setAnterior(p_P);
-                    a_tablaA.set(j,v_Registro);
+                    a_tablaO.set(j,v_Registro);
                 }
             }
             m_rectificarLista(p_P,p_Index);
@@ -540,10 +540,10 @@ public class c_busqCiegas {
      */
     private void m_rectificarLista(String p_N,int p_Index){
         List v_Sucesores = new ArrayList();
-        c_tablaA v_Registro;
+        c_tablaO v_Registro;
         String v_n=p_N;
-        for (int j = 0; j < a_tablaA.size(); j++) {
-            v_Registro=(c_tablaA)a_tablaA.get(j);
+        for (int j = 0; j < a_tablaO.size(); j++) {
+            v_Registro=(c_tablaO)a_tablaO.get(j);
             if(p_N.equals(v_Registro.m_getN())){
                 v_Sucesores=v_Registro.m_getSucesores();
             }
@@ -560,15 +560,15 @@ public class c_busqCiegas {
      */
     private void m_imprimeTablaA(){
         c_eliminados v_Eliminado = new c_eliminados();
-        c_tablaA v_Registro;
+        c_tablaO v_Registro;
         List v_Sucesores;
         c_sucesor v_Sucesor;
         System.out.print("\nN\t");
         System.out.print("Anterior\t");
         System.out.print("Costo\t\t");
         System.out.println("Sucesores\n");
-        for (int i = 0; i < a_tablaA.size(); i++) {
-            v_Registro=(c_tablaA) a_tablaA.get(i);
+        for (int i = 0; i < a_tablaO.size(); i++) {
+            v_Registro=(c_tablaO) a_tablaO.get(i);
             System.out.print("\u001B[31m"+v_Eliminado.m_buscaNodo(v_Registro.m_getN())+"\t");
             System.out.print("\u001B[34m"+v_Eliminado.m_buscaNodo(v_Registro.m_getAnterior())+"\t\t");
             System.out.print("\u001B[30m"+v_Registro.m_getCosto()+"\t\t");
@@ -595,9 +595,9 @@ public class c_busqCiegas {
      */
     private void m_imprimeCaminoTablaA(String p_Destino){
         System.out.println("\n"+m_imprimeCaminoTabla(p_Destino));
-        c_tablaA v_Registro;
-        for (int i = 0; i < a_tablaA.size(); i++) {
-            v_Registro=(c_tablaA) a_tablaA.get(i);
+        c_tablaO v_Registro;
+        for (int i = 0; i < a_tablaO.size(); i++) {
+            v_Registro=(c_tablaO) a_tablaO.get(i);
             if(v_Registro.m_getN().equals(p_Destino)){
                 System.out.println("Costo: \u001B[31m"+v_Registro.m_getCosto()+"\u001B[30m");
             }
@@ -613,9 +613,9 @@ public class c_busqCiegas {
     private String m_imprimeCaminoTabla(String p_Destino){
         c_eliminados v_Eliminado = new c_eliminados();
         String v_Camino="";
-        c_tablaA v_Registro;
-        for (int i = 0; i < a_tablaA.size(); i++) {
-            v_Registro=(c_tablaA) a_tablaA.get(i);
+        c_tablaO v_Registro;
+        for (int i = 0; i < a_tablaO.size(); i++) {
+            v_Registro=(c_tablaO) a_tablaO.get(i);
             if(v_Registro.m_getN().equals(p_Destino)){
                 if(v_Registro.m_getAnterior()!=null){
                     v_Camino=m_imprimeCaminoTabla(v_Registro.m_getAnterior());
