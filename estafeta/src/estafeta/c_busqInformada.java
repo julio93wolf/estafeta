@@ -1,6 +1,8 @@
 package estafeta;
 
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class c_busqInformada {
@@ -13,8 +15,8 @@ public class c_busqInformada {
     private Object [][] a_Grafo;
     private String [] a_G=null;
     private Scanner a_Entrada;
-    
-    StringBuffer a_sbOrigen,a_sbDestino;
+    private List a_Abierto=null;
+    private StringBuffer a_sbOrigen,a_sbDestino;
 
     private void m_busquedaA(){
         String a_EA;
@@ -45,6 +47,8 @@ public class c_busqInformada {
                         v_bdDestino=true;
                 }
             if(v_bdOrigen&&v_bdDestino){
+                a_Abierto=new ArrayList();
+                c_Abierto v_Registro = new c_Abierto(a_sbOrigen.toString(),null,0,0);
                 
             }else{
                 if(!v_bdOrigen)
