@@ -11,17 +11,19 @@ import java.util.Scanner;
  * @version 17.3.3
  */
 public class c_principal {
-      
-    private c_busqCiegas o_busquedas;
-    private c_rutas o_rutas;
+    
+    private c_busqInformada o_busqInformada;
+    private c_busqCiegas o_busqCiegas;
+    private c_rutas o_Rutas;
     
     /**
      * @name: c_caminos
      * @description: Constructor de la clase c_grafo
      */
     c_principal(){
-        o_rutas = new c_rutas();
-        o_busquedas = new c_busqCiegas();
+        o_Rutas = new c_rutas();
+        o_busqCiegas = new c_busqCiegas();
+        o_busqInformada = new c_busqInformada();
         m_Menu();
     }// Fin del constructor
     
@@ -41,20 +43,19 @@ public class c_principal {
                 System.out.println("\u001B[34m[3]\u001B[30m Busca ruta");
                 System.out.println("\u001B[34m[4]\u001B[30m Modifica ruta");
                 System.out.println("\u001B[34m[5]\u001B[30m Eliminar nodo");
-                System.out.println("\u001B[34m[6]\u001B[30m Busqueda en anchura");
-                System.out.println("\u001B[34m[7]\u001B[30m Busqueda en profundidad");
-                System.out.println("\u001B[34m[8]\u001B[30m Busqueda Grafos O");
-                System.out.println("\u001B[34m[9]\u001B[30m Salir");
+                System.out.println("\u001B[34m[6]\u001B[30m Busqueda a ciegas");
+                System.out.println("\u001B[34m[7]\u001B[30m Busqueda informada");
+                System.out.println("\u001B[34m[8]\u001B[30m Salir");
                 System.out.print("Opción: ");
                 v_Opcion=v_Entrada.nextInt();
-                if(v_Opcion>0&&v_Opcion<10)
+                if(v_Opcion>0&&v_Opcion<9)
                     m_Opcion(v_Opcion);
                 else
                     System.out.println("\u001B[31mError: Valor fuera de rango\u001B[30m");
             }catch(Exception e){
                 System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
             }
-        }while(v_Opcion!=9);
+        }while(v_Opcion!=8);
     }// Fin del método m_Menu
     
     /**
@@ -67,35 +68,31 @@ public class c_principal {
         
         switch(p_Opcion){
             case 1:{
-                o_rutas.m_Ingresa();
+                o_Rutas.m_Ingresa();
                 break;
             }
             case 2:{
-                o_rutas.m_leeSecuencial();
+                o_Rutas.m_leeSecuencial();
                 break;
             }
             case 3:{
-                o_rutas.m_leeAleatorio();
+                o_Rutas.m_leeAleatorio();
                 break;
             }
             case 4:{
-                o_rutas.m_Modifica();
+                o_Rutas.m_Modifica();
                 break;
             }
             case 5:{
-                o_rutas.m_eliminaNodo();
+                o_Rutas.m_eliminaNodo();
                 break;
             }
             case 6:{
-                o_busquedas.m_busquedaAnchura();
+                m_menuBusqCiegas();
                 break;
             }
             case 7:{
-                o_busquedas.m_busquedaProfundidad();
-                break;
-            }
-            case 8:{
-                m_menuGrafoO();
+                m_menuBusqIformada();
                 break;
             }
         }
@@ -104,9 +101,51 @@ public class c_principal {
     
     
     /**
-     * @name: m_menuGrafoO
-     * @description: Menu se seleccion para el metodo de busqueda de GrafoO
+     * @name: m_menuBusqCiegas
+     * @description: Menu de seleccion par busqueda a ciegas
      */
+    private void m_menuBusqCiegas(){
+        Scanner v_Entrada;
+        boolean v_Bandera=true;
+        int v_Opcion=0;
+        do{
+            try{
+                v_Entrada=new Scanner(System.in);
+                System.out.println("\n");
+                System.out.println("\u001B[34m[1]\u001B[30m Busqueda por zona");
+                System.out.println("\u001B[34m[2]\u001B[30m Busqueda por ruta");
+                System.out.println("\u001B[34m[3]\u001B[30m Busqueda por menor costo");
+                System.out.print("Opción: ");
+                v_Opcion=v_Entrada.nextInt();
+                if(v_Opcion>0&&v_Opcion<4){
+                    m_opcBusqCiegas(v_Opcion);
+                    v_Bandera=false;
+                }
+                else
+                    System.out.println("\u001B[31mError: Valor fuera de rango\u001B[30m");
+            }catch(Exception e){
+                System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
+            }
+        }while(v_Bandera);
+    }// Fin del metodo m_menuBusqCiegas
+    
+    private void m_opcBusqCiegas(int p_Opcion){
+        switch(p_Opcion){
+            case 1:{
+                o_busqCiegas.m_busquedaAnchura();
+                break;
+            }
+            case 2:{
+                o_busqCiegas.m_busquedaProfundidad();
+                break;
+            }
+            case 3:{
+                m_menuGrafoO();
+                break;
+            }
+        }
+    }
+    
     private void m_menuGrafoO(){
         Scanner v_Entrada;
         boolean v_Bandera=true;
@@ -120,7 +159,50 @@ public class c_principal {
                 System.out.print("Opción: ");
                 v_Opcion=v_Entrada.nextInt();
                 if(v_Opcion>0&&v_Opcion<3){
-                    m_opcionGrafoO(v_Opcion);
+                    m_opcGrafoO(v_Opcion);
+                    v_Bandera=false;
+                }
+                else
+                    System.out.println("\u001B[31mError: Valor fuera de rango\u001B[30m");
+            }catch(Exception e){
+                System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
+            }
+        }while(v_Bandera);
+     }
+    
+    /**
+     * @name: m_opcionGrafoO
+     * @description: Metodo que ingresa la opcion elegida en el menu de busqueda
+     * GrafoO
+     * @param p_Opcion Direccion del Costo
+     */
+    private void m_opcGrafoO(int p_Opcion){
+        switch(p_Opcion){
+            case 1:{
+                o_busqCiegas.m_busquedaGrafoO(2);
+                break;
+            }
+            case 2:{
+                o_busqCiegas.m_busquedaGrafoO(3);
+                break;
+            }
+        }
+    } // Fin del método m_Opcion
+    
+    private void m_menuBusqIformada(){
+        Scanner v_Entrada;
+        boolean v_Bandera=true;
+        int v_Opcion=0;
+        do{
+            try{
+                v_Entrada=new Scanner(System.in);
+                System.out.println("\n");
+                System.out.println("\u001B[34m[1]\u001B[30m Mejor camino");
+                System.out.println("\u001B[34m[2]\u001B[30m Mejor camino con menor procesos");
+                System.out.print("Opción: ");
+                v_Opcion=v_Entrada.nextInt();
+                if(v_Opcion>0&&v_Opcion<3){
+                    m_menuCostoBusqInformada(v_Opcion);
                     v_Bandera=false;
                 }
                 else
@@ -131,22 +213,41 @@ public class c_principal {
         }while(v_Bandera);
     }
     
-    /**
-     * @name: m_opcionGrafoO
-     * @description: Metodo que ingresa la opcion elegida en el menu de busqueda
-     * GrafoO
-     * @param p_Opcion Direccion del Costo
-     */
-    private void m_opcionGrafoO(int p_Opcion){
+    private void m_menuCostoBusqInformada(int p_Opcion){
+        Scanner v_Entrada;
+        boolean v_Bandera=true;
+        int v_Opcion=0;
+        do{
+            try{
+                v_Entrada=new Scanner(System.in);
+                System.out.println("\n");
+                System.out.println("\u001B[34m[1]\u001B[30m Menor Costo_1");
+                System.out.println("\u001B[34m[2]\u001B[30m Menor Costo_2");
+                System.out.print("Opción: ");
+                v_Opcion=v_Entrada.nextInt();
+                if(v_Opcion>0&&v_Opcion<3){
+                    m_opcBusqInformada(p_Opcion,v_Opcion);
+                    v_Bandera=false;
+                }
+                else
+                    System.out.println("\u001B[31mError: Valor fuera de rango\u001B[30m");
+            }catch(Exception e){
+                System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
+            }
+        }while(v_Bandera);
+    }
+    
+    private void m_opcBusqInformada(int p_Opcion,int p_Costo){
+        int v_Costo=(p_Costo==1)?2:3;
         switch(p_Opcion){
             case 1:{
-                o_busquedas.m_busquedaGrafoO(2);
+                o_busqInformada.m_busquedaA(v_Costo);
                 break;
             }
             case 2:{
-                o_busquedas.m_busquedaGrafoO(3);
+                
                 break;
             }
         }
-    } // Fin del método m_Opcion
+    }
 }

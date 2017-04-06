@@ -478,7 +478,7 @@ public class c_busqCiegas {
                         a_Abierto.m_sacarCola();
                     }else{
                         a_Abierto.m_vaciaCola();
-                        m_imprimeTablaA();
+                        //m_imprimeTablaA();
                         m_imprimeCaminoTablaA(v_Destino.toString());
                     }
                 }while(a_Abierto.m_getRaiz()!=null);    
@@ -493,6 +493,129 @@ public class c_busqCiegas {
         }
         System.out.println("");
     }// Fin del método m_GrafoO
+    
+    
+    public float m_busquedaGrafoO(String p_Origen,String p_Destino,int p_Index){
+        StringBuffer v_Origen,v_Destino;
+        c_eliminados v_Eliminados;
+        List v_Sucesores=null;
+        a_tablaA = new ArrayList();
+        c_tablaA v_Regristro;
+        boolean v_Bandera=false;
+        String v_n,v_Anterior=null;
+        float v_CostoN=0;
+        m_fillGrafo();
+        m_fillG();
+        c_tablaA v_Registro;
+        try{
+            a_Origen=p_Origen;
+            v_Origen=new StringBuffer(a_Origen);
+            v_Origen.setLength(17);
+            a_Destino=p_Destino;
+            v_Destino=new StringBuffer(a_Destino);
+            v_Destino.setLength(17);
+            boolean v_bdOrigen=false;
+            boolean v_bdDestino=false;
+            v_Eliminados = new c_eliminados();
+            if(v_Eliminados.m_buscaEliminado(v_Origen.toString()))
+                for (int i = 0; i < a_G.length; i++) {
+                    if(a_G[i].equals(v_Origen.toString()))
+                        v_bdOrigen=true;
+                }
+            if(v_Eliminados.m_buscaEliminado(v_Destino.toString()))
+                for (int i = 0; i < a_G.length; i++) {
+                    if(a_G[i].equals(v_Destino.toString()))
+                        v_bdDestino=true;
+                }
+            if(v_bdOrigen&&v_bdDestino){
+                //Inicialización
+                a_Abierto=new c_cola();
+                // Abierta= (inicial)
+                a_Abierto.m_insertarCola(v_Origen.toString());              
+                v_n=a_Abierto.m_getVertice();
+                v_Regristro = new c_tablaA(v_n,v_Anterior,v_CostoN,v_Sucesores);
+                a_tablaA.add(v_Regristro);
+                do{
+                    //n=ExtraerPrimero(Abierta)
+                    v_n=a_Abierto.m_getVertice();
+                    //Si no es el objetivo
+                    if(!v_n.equals(v_Destino.toString())){
+                        //Obtiene los sucesores de n - S=Sucesores(n)
+                        v_Sucesores = new ArrayList();
+                        for (int i = 0; i < a_Grafo.length; i++) {
+                            if(v_n.equals((String)a_Grafo[i][0])){
+                                c_sucesor v_Sucesor=new c_sucesor((String)a_Grafo[i][1],(float)a_Grafo[i][p_Index]);
+                                v_Sucesores.add(v_Sucesor);
+                            }
+                        }
+                        // Añade S a la entrada de n en la tabla_a
+                        for (int i = 0; i < a_tablaA.size(); i++) {
+                            v_Regristro=(c_tablaA)a_tablaA.get(i);
+                            if(v_Regristro.m_getN().equals(v_n)){
+                                v_Regristro.m_setSucesores(v_Sucesores);
+                                a_tablaA.set(i,v_Regristro);
+                            }
+                        }
+                        //Para cada q de S 
+                        for (int i = 0; i < v_Sucesores.size(); i++) {   
+                            // Si q pertenece a tabla_a
+                            c_sucesor v_Sucesor=(c_sucesor)v_Sucesores.get(i);
+                            for (int j = 0; j < a_tablaA.size(); j++) {
+                                v_Regristro=(c_tablaA)a_tablaA.get(j);
+                                if(v_Regristro.m_getN().equals(v_Sucesor.m_getSucesor())){
+                                    v_Bandera=true;
+                                }
+                            }
+                            
+                            if(v_Bandera){
+                                //Rectificar(q,n,Coste(n,q))
+                                String q=v_n;
+                                String n= v_Sucesor.m_getSucesor();
+                                float costoNQ= v_Sucesor.m_getCosto();
+                                m_Rectificar(n,q,costoNQ,3);
+                            }else{
+                                //Anterior(q)=n
+                                v_Anterior=v_n;
+                                //Coste(inicial,n)
+                                for (int j = 0; j < a_tablaA.size(); j++) {
+                                    v_Regristro=(c_tablaA)a_tablaA.get(j);
+                                    if(v_Anterior.equals(v_Regristro.m_getN())){
+                                        v_CostoN=v_Regristro.m_getCosto();
+                                    }
+                                }
+                                //Coste(Inicial,q)=Coste(Inicial,n)+Coste(n,q);
+                                v_CostoN+=v_Sucesor.m_getCosto();
+                                //Coloca q en la tabla_a
+                                v_Regristro = new c_tablaA(v_Sucesor.m_getSucesor(),v_Anterior,v_CostoN,null);
+                                a_tablaA.add(v_Regristro);
+                                //Abierta=Mezclar(q,Abierta)
+                                a_Abierto.m_insertarCola(v_Sucesor.m_getSucesor());
+                            }
+                            v_Bandera=false;
+                        }
+                        a_Abierto.m_sacarCola();
+                    }else{
+                        a_Abierto.m_vaciaCola();
+                        for (int i = 0; i < a_tablaA.size(); i++) {
+                           c_tablaA v_retCosto=(c_tablaA) a_tablaA.get(i);
+                            if(v_retCosto.m_getN().equals(v_Destino.toString())){
+                                v_CostoN=v_retCosto.m_getCosto();
+                            }
+                        }
+                    }
+                }while(a_Abierto.m_getRaiz()!=null);    
+            }else{
+                if(!v_bdOrigen)
+                    System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
+                if(!v_bdDestino)
+                    System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
+            }
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
+        return v_CostoN;
+    }// Fin del método m_GrafoO
+    
     
     /**
      * @name: m_Rectificar

@@ -2,6 +2,9 @@ package estafeta;
 
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,16 +19,22 @@ public class c_busqInformada {
     private String [] a_G=null;
     private Scanner a_Entrada;
     private List a_Abierto=null;
+    private List a_Cerrado=null;
     private StringBuffer a_sbOrigen,a_sbDestino;
+    
 
-    private void m_busquedaA(int p_Index){
-        String v_EA;
-        List v_Sucesores;
-        c_sucesor v_Sucesor;
-        c_abierto v_Registro=null;
+    public void m_busquedaA(int p_Index){
+        String v_EA="";
+        List<c_sucesorA> v_Sucesores;
+        c_sucesorA v_Sucesor;
+        c_tabla v_Registro;
+        c_busqCiegas v_Hueristica=new c_busqCiegas();
         boolean v_bdOrigen=false;
         boolean v_bdDestino=false;
+        boolean v_bdAbierto=true;
+        boolean v_bdCerrado=true;
         c_eliminados v_Eliminados;
+        float v_Gn=0,v_Hn=0,v_Fn=0;
         m_fillGrafo();
         m_fillG();
         try{
@@ -51,23 +60,107 @@ public class c_busqInformada {
                 }
             if(v_bdOrigen&&v_bdDestino){
                 a_Abierto=new ArrayList();
-                v_Registro = new c_abierto(a_sbOrigen.toString(),null,0,0);
+                a_Cerrado=new ArrayList();
+                v_Hn=v_Hueristica.m_busquedaGrafoO(a_Origen, a_Destino, p_Index);
+                v_Fn=v_Gn+v_Hn;
+                v_Registro=new c_tabla(a_sbOrigen.toString(),null,v_Gn,v_Hn,v_Fn);
                 a_Abierto.add(v_Registro);
                 do{
-                    v_Registro=(c_abierto)a_Abierto.get(0);
-                    v_EA=v_Registro.m_getNodo();
-                    v_Sucesores = new ArrayList();
-                    for (int i = 0; i < a_Grafo.length; i++) {
-                        if(v_EA.equals((String)a_Grafo[i][0])){
-                            v_Sucesor=new c_sucesor((String)a_Grafo[i][1],(float)a_Grafo[i][p_Index]);
-                            v_Sucesores.add(v_Sucesor);
+                    //EA <- Primer elemento de abiertos
+                    v_Registro=(c_tabla)a_Abierto.get(0);
+                    v_EA=v_Registro.m_getN();
+                    //Elmina EA de abiertos
+                    a_Abierto.remove(0);
+                    //EA a Cerrado
+                    a_Cerrado.add(v_Registro);
+                    //Si EA no es la meta
+                    if(!v_EA.equals(a_sbDestino.toString())){
+                        //Expandir nodos de EA
+                        v_Sucesores = new ArrayList<c_sucesorA>();
+                        for (int i = 0; i < a_Grafo.length; i++) {
+                            if(v_EA.equals((String)a_Grafo[i][0])){
+                                float v_tempGn=(float)a_Grafo[i][p_Index];
+                                float v_tempHn=v_Hueristica.m_busquedaGrafoO((String)a_Grafo[i][1], a_Destino, p_Index);
+                                float v_tempFn=v_tempGn+v_tempHn;
+                                v_Sucesor=new c_sucesorA((String)a_Grafo[i][1],v_tempGn,v_tempHn,v_tempFn);
+                                v_Sucesores.add(v_Sucesor);
+                                
+                            }
                         }
-                    }
-                    for (int i = 0; i < v_Sucesores.size(); i++) {
-                        v_Sucesor=(c_sucesor)v_Sucesores.get(0);
                         
+                        Collections.sort(v_Sucesores, new Comparator<c_sucesorA>(){
+                            @Override
+                            public int compare(c_sucesorA o1, c_sucesorA o2) {
+                                    return o1.m_getFn().compareTo(o2.m_getFn());
+                            }
+                        });
+                        
+                        //Para cada sucesor q de EA
+                        for (int i = 0; i < v_Sucesores.size(); i++) {
+                            v_Sucesor=(c_sucesorA)v_Sucesores.get(i);
+                            //Calcular f(q)
+                            v_Gn=v_Registro.m_getGn()+v_Sucesor.m_getGn();
+                            v_Hn=v_Hueristica.m_busquedaGrafoO(v_Sucesor.m_getN(), a_Destino, p_Index);
+                            v_Fn=v_Gn+v_Hn;
+                            v_Registro=new c_tabla(v_Sucesor.m_getN(),v_Registro.m_getN(),v_Gn,v_Hn,v_Fn);
+                            v_bdAbierto=true;
+                            v_bdCerrado=true;
+                            for (int j = 0; j < a_Abierto.size(); j++) {
+                                    c_tabla v_tempRegAbierto = (c_tabla) a_Abierto.get(i);
+                                if(v_tempRegAbierto.m_getN().equals(v_Sucesor.m_getN())){
+                                    v_bdAbierto=false;
+                                }
+                            }
+                            for (int j = 0; j < a_Abierto.size(); j++) {
+                                    c_tabla v_tempRegCerrado = (c_tabla) a_Abierto.get(i);
+                                if(v_tempRegCerrado.m_getN().equals(v_Sucesor.m_getN())){
+                                    v_bdCerrado=false;
+                                }
+                            }
+                            
+                            if(v_bdAbierto||v_bdCerrado){
+                                //Si q esta en abierto o cerrado
+                                if(v_bdAbierto){
+                                    for (int j = 0; j < a_Abierto.size(); j++) {
+                                        c_tabla v_tempRegAbierto = (c_tabla) a_Abierto.get(i);
+                                        if(v_tempRegAbierto.m_getN().equals(v_Sucesor.m_getN())){
+                                            //Compara el valor nueno de f(q) con el anterior
+                                            if(v_tempRegAbierto.m_getFn()>v_Fn){
+                                                //Colocar EA como nuevo padre de q
+                                                v_tempRegAbierto.m_setPadre(v_EA);
+                                                v_tempRegAbierto.m_setGn(v_Gn);
+                                                v_tempRegAbierto.m_setHn(v_Hn);
+                                                v_tempRegAbierto.m_setFn(v_Fn);
+                                                a_Abierto.set(j,v_tempRegAbierto);
+                                                System.out.println("");
+                                            }
+                                        }
+                                    }
+                                }
+                                if(v_bdCerrado){
+                                    //Si esta en cerrado eliminar de cerrado y llevar a abierto
+                                    for (int j = 0; j < a_Cerrado.size(); j++) {
+                                        c_tabla v_tempRegCerrado = (c_tabla) a_Abierto.get(i);
+                                        if(v_tempRegCerrado.m_getN().equals(v_Sucesor.m_getN())){
+                                            a_Abierto.add(v_tempRegCerrado);
+                                            a_Cerrado.remove(j);
+                                        }
+                                    }
+                                    System.out.println("");
+                                }
+                            }else{
+                                //Si q no esta en abierto ni en cerrado, colocar en abierto
+                                a_Abierto.add(v_Registro);
+                                System.out.println("");
+                            }
+                            //Ordenar Abierta;
+                        }
+                    }else{
+                        //Termino
+                        System.out.println("");
                     }
                 }while(a_Abierto.size()!=0);
+                System.out.println("No hay solucion");
             }else{
                 if(!v_bdOrigen)
                     System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
@@ -194,4 +287,6 @@ public class c_busqInformada {
             System.out.println("\u001B[31mError: No se pudo abrir el archivo maestro\u001B[30m");
         }
     }// Fin del método m_fillG
+    
+    
 }
