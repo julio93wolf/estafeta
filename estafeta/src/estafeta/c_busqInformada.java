@@ -87,14 +87,7 @@ public class c_busqInformada {
                                 
                             }
                         }
-                        
-                        Collections.sort(v_Sucesores, new Comparator<c_sucesorA>(){
-                            @Override
-                            public int compare(c_sucesorA o1, c_sucesorA o2) {
-                                    return o1.m_getFn().compareTo(o2.m_getFn());
-                            }
-                        });
-                        
+                        Collections.sort(v_Sucesores, new c_compFn());   
                         //Para cada sucesor q de EA
                         for (int i = 0; i < v_Sucesores.size(); i++) {
                             v_Sucesor=(c_sucesorA)v_Sucesores.get(i);

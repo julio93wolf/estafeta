@@ -23,7 +23,7 @@ public class c_busqCiegas {
 
     /**
      * @name: m_busquedaAnchura
-     * @description: Metodo para buscar por método de anchura la mejor ruta por zona
+     * @description: Metodo para buscar por anchura la mejor ruta por zona
      */
     public void m_busquedaAnchura(){
         StringBuffer v_Origen,v_Destino;
@@ -118,7 +118,7 @@ public class c_busqCiegas {
     
     /**
      * @name: m_busquedaProfundidad
-     * @description: Metodo para buscar por método de profundad la mejor ruta por ruta
+     * @description: Metodo para buscar por profundad la mejor ruta
      */
     public void m_busquedaProfundidad(){
         StringBuffer v_Origen,v_Destino;
@@ -268,7 +268,7 @@ public class c_busqCiegas {
     
     /**
      * @name: m_fillG
-     * @description: Metodo llenar G con los registros del archivo maestro
+     * @description: Metodo llenar G con los vertices del archivo maestro
      */
     private void m_fillG(){
         a_G=null;
@@ -371,7 +371,7 @@ public class c_busqCiegas {
     
     /**
      * @name: m_busquedaGrafoO
-     * @description: Metodo para buscar el camino mas corto por Grafo O
+     * @description: Metodo para buscar la ruta mas corto por Grafo O
      * @param p_Index Direccion del costo
      */
     public void m_busquedaGrafoO(int p_Index){
@@ -477,6 +477,7 @@ public class c_busqCiegas {
                         }
                         a_Abierto.m_sacarCola();
                     }else{
+                        //Si el el objetivo vacia la cola e imprime la ruta
                         a_Abierto.m_vaciaCola();
                         //m_imprimeTablaA();
                         m_imprimeCaminoTablaA(v_Destino.toString());
@@ -494,7 +495,14 @@ public class c_busqCiegas {
         System.out.println("");
     }// Fin del método m_GrafoO
     
-    
+    /**
+     * @name: m_busquedaGrafoO
+     * @description: Metodo para buscar la ruta mas corto por Grafo O con parametros (Usado para conseguir la heuristica en A y A*)
+     * @param p_Origen Nodo Origen
+     * @param p_Destino Nodo Destino
+     * @param p_Index Direccion del costo
+     * @return Costo de la ruta (Heuristica)
+     */
     public float m_busquedaGrafoO(String p_Origen,String p_Destino,int p_Index){
         StringBuffer v_Origen,v_Destino;
         c_eliminados v_Eliminados;
