@@ -348,7 +348,7 @@ public class c_rutas {
      * @description: Metodo para eliminar un nodo del archivo maestro, marcando todos los registros
      * que esten asociados al nodo
      */
-    public void m_eliminaNodo(){
+    public void m_eliminaNodo(int p_Opcion){
         c_eliminados v_Eliminados;
         RandomAccessFile v_Maestro = null,v_Indice=null;
         long v_apActual,v_apFinal;
@@ -376,51 +376,56 @@ public class c_rutas {
                     v_nodoBuffer=new StringBuffer(v_Nodo);
                     v_nodoBuffer.setLength(17);
                     
-                    while(v_apActual!=v_apFinal){
-                        a_Llave=v_Maestro.readInt();
-                        
-                        char v_Origen[] = new char[17];
-                        for (int i = 0; i < v_Origen.length; i++) {
-                            v_Origen[i]=v_Maestro.readChar();
-                        }
-                        a_Origen= new String(v_Origen);
+                    if(v_Eliminados.m_buscaEliminado(v_nodoBuffer.toString())){
+                        while(v_apActual!=v_apFinal){
+                            a_Llave=v_Maestro.readInt();
 
-                        char v_Destino[] = new char[17];
-                        for (int i = 0; i < v_Destino.length; i++) {
-                            v_Destino[i]=v_Maestro.readChar();
-                        }
-                        a_Destino= new String(v_Destino);
-                        
-                        v_Maestro.seek(v_apActual);
-                        if(a_Llave>0){
-                            if(a_Origen.equals(v_nodoBuffer.toString())||a_Destino.equals(v_nodoBuffer.toString())){
-                                v_Maestro.writeInt(-1);
-                                v_Indice.writeInt(-1);
-                                v_Eliminados.m_Inserta(v_nodoBuffer.toString());
+                            char v_Origen[] = new char[17];
+                            for (int i = 0; i < v_Origen.length; i++) {
+                                v_Origen[i]=v_Maestro.readChar();
+                            }
+                            a_Origen= new String(v_Origen);
+
+                            char v_Destino[] = new char[17];
+                            for (int i = 0; i < v_Destino.length; i++) {
+                                v_Destino[i]=v_Maestro.readChar();
+                            }
+                            a_Destino= new String(v_Destino);
+
+                            v_Maestro.seek(v_apActual);
+                            if(a_Llave>0){
+                                if(a_Origen.equals(v_nodoBuffer.toString())||a_Destino.equals(v_nodoBuffer.toString())){
+                                    v_Maestro.writeInt(p_Opcion);
+                                    v_Indice.writeInt(p_Opcion);
+                                    v_Eliminados.m_Inserta(v_nodoBuffer.toString());
+                                }else{
+                                    v_Maestro.readInt();
+                                    v_Indice.readInt();
+                                }
                             }else{
                                 v_Maestro.readInt();
                                 v_Indice.readInt();
                             }
-                        }else{
-                            v_Maestro.readInt();
-                            v_Indice.readInt();
-                        }
-                        v_Origen = new char[17];
-                        for (int i = 0; i < v_Origen.length; i++) {
-                            v_Origen[i]=v_Maestro.readChar();
-                        }
-                        a_Origen= new String(v_Origen);
+                            v_Origen = new char[17];
+                            for (int i = 0; i < v_Origen.length; i++) {
+                                v_Origen[i]=v_Maestro.readChar();
+                            }
+                            a_Origen= new String(v_Origen);
 
-                        v_Destino = new char[17];
-                        for (int i = 0; i < v_Destino.length; i++) {
-                            v_Destino[i]=v_Maestro.readChar();
+                            v_Destino = new char[17];
+                            for (int i = 0; i < v_Destino.length; i++) {
+                                v_Destino[i]=v_Maestro.readChar();
+                            }
+
+                            a_Destino= new String(v_Destino);
+                            v_Maestro.readFloat();
+                            v_Maestro.readFloat();
+                            v_Indice.readLong();
+                            v_apActual=v_Maestro.getFilePointer();
                         }
-                        
-                        a_Destino= new String(v_Destino);
-                        v_Maestro.readFloat();
-                        v_Maestro.readFloat();
-                        v_Indice.readLong();
-                        v_apActual=v_Maestro.getFilePointer();
+                        System.out.println("\n\u001B[31mNodo ["+v_nodoBuffer+"] eliminado\u001B[30m");
+                    }else{
+                        System.out.println("\n\u001B[31mNodo ["+v_nodoBuffer+"] no existe5\u001B[30m");
                     }
                     System.out.println("\n\u001B[31m¿Desea eliminar otro nodo?\u001B[30m");
                     System.out.println("\u001B[34m[Si]\u001B[30m=1\n\u001B[34m[No]\u001B[30m=Cualquier tecla");

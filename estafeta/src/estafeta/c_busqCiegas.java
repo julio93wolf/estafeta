@@ -221,7 +221,7 @@ public class c_busqCiegas {
             int v_tamañoGrafo=0;
             
             while(v_apActual!=v_apFinal){
-                v_Maestro.readInt();
+                a_Llave=v_Maestro.readInt();
                 char v_Origen[] = new char[17];
                 for (int i = 0; i < v_Origen.length; i++) {
                     v_Origen[i]=v_Maestro.readChar();
@@ -232,7 +232,9 @@ public class c_busqCiegas {
                 }
                 v_Maestro.readFloat();
                 v_Maestro.readFloat();
-                v_tamañoGrafo++;
+                if(a_Llave>=-1){
+                    v_tamañoGrafo++;
+                }
                 v_apActual=v_Maestro.getFilePointer();
             }
             a_Grafo=new Object[v_tamañoGrafo][4];
@@ -253,16 +255,20 @@ public class c_busqCiegas {
                 a_Destino= new String(v_Destino);
                 a_Costo1=v_Maestro.readFloat();
                 a_Costo2=v_Maestro.readFloat();
-                a_Grafo[v_tamañoGrafo][0]= a_Origen;
-                a_Grafo[v_tamañoGrafo][1]= a_Destino;
-                a_Grafo[v_tamañoGrafo][2]= a_Costo1;
-                a_Grafo[v_tamañoGrafo][3]= a_Costo2;
-                v_tamañoGrafo++;
+                if(a_Llave>=-1){
+                    a_Grafo[v_tamañoGrafo][0]= a_Origen;
+                    a_Grafo[v_tamañoGrafo][1]= a_Destino;
+                    a_Grafo[v_tamañoGrafo][2]= a_Costo1;
+                    a_Grafo[v_tamañoGrafo][3]= a_Costo2;
+                    v_tamañoGrafo++;
+                }
                 v_apActual=v_Maestro.getFilePointer();
             }
             v_Maestro.close();
         }catch(Exception e){
             System.out.println("\u001B[31mError: No se pudo abrir el archivo maestro\u001B[30m");
+            System.out.println("FillGrafo");
+            System.out.println(e.toString());
         }
     }// Fin del método m_fillGrafo
     
@@ -281,7 +287,7 @@ public class c_busqCiegas {
             v_apFinal=v_Maestro.length();
             int v_tamañoG=0;
             while(v_apActual!=v_apFinal){
-                v_Maestro.readInt();
+                a_Llave=v_Maestro.readInt();
                 char v_Origen[] = new char[17];
                 for (int i = 0; i < v_Origen.length; i++) {
                     v_Origen[i]=v_Maestro.readChar();
@@ -294,8 +300,10 @@ public class c_busqCiegas {
                 v_Maestro.readFloat();
                 v_Maestro.readFloat();
                 if(!v_Anterior.equals(a_Origen)){
-                    v_Anterior=a_Origen;
-                    v_tamañoG++;
+                    if(a_Llave>(-2)){
+                        v_tamañoG++;
+                        v_Anterior=a_Origen;
+                    }
                 }
                 v_apActual=v_Maestro.getFilePointer();
             }
@@ -305,7 +313,7 @@ public class c_busqCiegas {
             v_Anterior="";
             int v_Indice=0;
             while(v_apActual!=v_apFinal){
-                v_Maestro.readInt();
+                a_Llave=v_Maestro.readInt();
                 char v_Origen[] = new char[17];
                 for (int i = 0; i < v_Origen.length; i++) {
                     v_Origen[i]=v_Maestro.readChar();
@@ -317,16 +325,21 @@ public class c_busqCiegas {
                 }
                 v_Maestro.readFloat();
                 v_Maestro.readFloat();
+
                 if(!v_Anterior.equals(a_Origen)){
-                    a_G[v_Indice]=a_Origen;
-                    v_Indice++;
-                    v_Anterior=a_Origen;
+                    if(a_Llave>(-2)){
+                        a_G[v_Indice]=a_Origen;
+                        v_Indice++; 
+                        v_Anterior=a_Origen;
+                    }
                 }
                 v_apActual=v_Maestro.getFilePointer();
             }
             v_Maestro.close();
         }catch(Exception e){
             System.out.println("\u001B[31mError: No se pudo abrir el archivo maestro\u001B[30m");
+            System.out.println("FillG");
+            System.out.println(e.toString());
         }
     }// Fin del método m_fillG
     

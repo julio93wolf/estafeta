@@ -81,7 +81,7 @@ public class c_principal {
                 break;
             }
             case 5:{
-                o_Rutas.m_eliminaNodo();
+                m_menuElimina();
                 break;
             }
             case 6:{
@@ -96,6 +96,44 @@ public class c_principal {
     } // Fin del método m_Opcion
     
     
+    /**
+     * 
+     */
+    private void m_menuElimina(){
+        Scanner v_Entrada;
+        boolean v_Bandera=true;
+        int v_Opcion=0;
+        do{
+            try{
+                v_Entrada=new Scanner(System.in);
+                System.out.println("\n\u001B[31m¿Desea mantener adyacencias?\u001B[30m");
+                System.out.println("\u001B[34m[Si]\u001B[30m=1\n\u001B[34m[No]\u001B[30m=2");
+                System.out.print("Opción: ");
+                v_Opcion=v_Entrada.nextInt();
+                if(v_Opcion>0&&v_Opcion<3){
+                    m_opcElimina(v_Opcion);
+                    v_Bandera=false;
+                }
+                else
+                    System.out.println("\u001B[31mError: Valor fuera de rango\u001B[30m");
+            }catch(Exception e){
+                System.out.println("\u001B[31mError: Valor invalido\u001B[30m");
+            }
+        }while(v_Bandera);
+    }
+    
+    private void m_opcElimina(int p_Opcion){
+        switch(p_Opcion){
+            case 1:{
+                o_Rutas.m_eliminaNodo(-1);
+                break;
+            }
+            case 2:{
+                o_Rutas.m_eliminaNodo(-2);
+                break;
+            }
+        }
+    }
     
     /**
      * @name: m_menuBusqCiegas
