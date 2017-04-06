@@ -1,10 +1,8 @@
 package estafeta;
 
 import java.util.Comparator;
-import java.lang.*;
-
  
-public class c_compFn implements Comparator{
+public class c_ordSucesores implements Comparator{
 
     @Override
     public int compare(Object t, Object t1) {

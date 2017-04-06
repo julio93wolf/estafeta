@@ -25,9 +25,10 @@ public class c_busqInformada {
 
     public void m_busquedaA(int p_Index){
         String v_EA="";
-        List<c_sucesorA> v_Sucesores;
+        List v_Sucesores;
         c_sucesorA v_Sucesor;
         c_tabla v_Registro;
+        c_tabla v_regSucesor;
         c_busqCiegas v_Hueristica=new c_busqCiegas();
         boolean v_bdOrigen=false;
         boolean v_bdDestino=false;
@@ -76,7 +77,7 @@ public class c_busqInformada {
                     //Si EA no es la meta
                     if(!v_EA.equals(a_sbDestino.toString())){
                         //Expandir nodos de EA
-                        v_Sucesores = new ArrayList<c_sucesorA>();
+                        v_Sucesores = new ArrayList();
                         for (int i = 0; i < a_Grafo.length; i++) {
                             if(v_EA.equals((String)a_Grafo[i][0])){
                                 float v_tempGn=(float)a_Grafo[i][p_Index];
@@ -87,7 +88,7 @@ public class c_busqInformada {
                                 
                             }
                         }
-                        Collections.sort(v_Sucesores, new c_compFn());   
+                        Collections.sort(v_Sucesores, new c_ordSucesores());   
                         //Para cada sucesor q de EA
                         for (int i = 0; i < v_Sucesores.size(); i++) {
                             v_Sucesor=(c_sucesorA)v_Sucesores.get(i);
@@ -95,19 +96,19 @@ public class c_busqInformada {
                             v_Gn=v_Registro.m_getGn()+v_Sucesor.m_getGn();
                             v_Hn=v_Hueristica.m_busquedaGrafoO(v_Sucesor.m_getN(), a_Destino, p_Index);
                             v_Fn=v_Gn+v_Hn;
-                            v_Registro=new c_tabla(v_Sucesor.m_getN(),v_Registro.m_getN(),v_Gn,v_Hn,v_Fn);
-                            v_bdAbierto=true;
-                            v_bdCerrado=true;
+                            v_regSucesor=new c_tabla(v_Sucesor.m_getN(),v_Registro.m_getN(),v_Gn,v_Hn,v_Fn);
+                            v_bdAbierto=false;
+                            v_bdCerrado=false;
                             for (int j = 0; j < a_Abierto.size(); j++) {
-                                    c_tabla v_tempRegAbierto = (c_tabla) a_Abierto.get(i);
+                                c_tabla v_tempRegAbierto = (c_tabla) a_Abierto.get(j);
                                 if(v_tempRegAbierto.m_getN().equals(v_Sucesor.m_getN())){
-                                    v_bdAbierto=false;
+                                    v_bdAbierto=true;
                                 }
                             }
-                            for (int j = 0; j < a_Abierto.size(); j++) {
-                                    c_tabla v_tempRegCerrado = (c_tabla) a_Abierto.get(i);
+                            for (int j = 0; j < a_Cerrado.size(); j++) {
+                                c_tabla v_tempRegCerrado = (c_tabla) a_Cerrado.get(j);
                                 if(v_tempRegCerrado.m_getN().equals(v_Sucesor.m_getN())){
-                                    v_bdCerrado=false;
+                                    v_bdCerrado=true;
                                 }
                             }
                             
@@ -115,7 +116,7 @@ public class c_busqInformada {
                                 //Si q esta en abierto o cerrado
                                 if(v_bdAbierto){
                                     for (int j = 0; j < a_Abierto.size(); j++) {
-                                        c_tabla v_tempRegAbierto = (c_tabla) a_Abierto.get(i);
+                                        c_tabla v_tempRegAbierto = (c_tabla) a_Abierto.get(j);
                                         if(v_tempRegAbierto.m_getN().equals(v_Sucesor.m_getN())){
                                             //Compara el valor nueno de f(q) con el anterior
                                             if(v_tempRegAbierto.m_getFn()>v_Fn){
@@ -125,7 +126,6 @@ public class c_busqInformada {
                                                 v_tempRegAbierto.m_setHn(v_Hn);
                                                 v_tempRegAbierto.m_setFn(v_Fn);
                                                 a_Abierto.set(j,v_tempRegAbierto);
-                                                System.out.println("");
                                             }
                                         }
                                     }
@@ -133,27 +133,32 @@ public class c_busqInformada {
                                 if(v_bdCerrado){
                                     //Si esta en cerrado eliminar de cerrado y llevar a abierto
                                     for (int j = 0; j < a_Cerrado.size(); j++) {
-                                        c_tabla v_tempRegCerrado = (c_tabla) a_Abierto.get(i);
+                                        c_tabla v_tempRegCerrado = (c_tabla) a_Cerrado.get(j);
                                         if(v_tempRegCerrado.m_getN().equals(v_Sucesor.m_getN())){
-                                            a_Abierto.add(v_tempRegCerrado);
-                                            a_Cerrado.remove(j);
+                                            if(v_tempRegCerrado.m_getFn()>v_Fn){
+                                                v_tempRegCerrado.m_setPadre(v_EA);
+                                                v_tempRegCerrado.m_setGn(v_Gn);
+                                                v_tempRegCerrado.m_setHn(v_Hn);
+                                                v_tempRegCerrado.m_setFn(v_Fn);
+                                                a_Abierto.add(v_tempRegCerrado);
+                                                a_Cerrado.remove(j);
+                                            }
                                         }
                                     }
-                                    System.out.println("");
                                 }
                             }else{
                                 //Si q no esta en abierto ni en cerrado, colocar en abierto
-                                a_Abierto.add(v_Registro);
-                                System.out.println("");
+                                a_Abierto.add(v_regSucesor);
                             }
-                            //Ordenar Abierta;
                         }
+                        //Ordernaer Abierta
+                        Collections.sort(a_Abierto, new c_ordAbierta());   
                     }else{
                         //Termino
-                        System.out.println("");
+                        m_imprimeCamino(a_sbDestino.toString());
+                        a_Abierto.removeAll(a_Abierto);
                     }
                 }while(a_Abierto.size()!=0);
-                System.out.println("No hay solucion");
             }else{
                 if(!v_bdOrigen)
                     System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
@@ -161,8 +166,56 @@ public class c_busqInformada {
                     System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
             }
         }catch(Exception e){
-            
+            System.out.println(e.toString());
+            System.out.println(e.hashCode());
         }
+    }
+    
+    private void m_imprimeCamino(String p_Destino){
+        System.out.println("\n"+m_imprimeCaminoA(p_Destino));
+        c_tabla v_Registro;
+        for (int i = 0; i < a_Abierto.size(); i++) {
+            v_Registro=(c_tabla) a_Abierto.get(i);
+            if(v_Registro.m_getN().equals(p_Destino)){
+                System.out.println("Costo: \u001B[31m"+v_Registro.m_getGn()+"\u001B[30m");
+            }
+        }
+        for (int i = 0; i < a_Cerrado.size(); i++) {
+            v_Registro=(c_tabla) a_Cerrado.get(i);
+            if(v_Registro.m_getN().equals(p_Destino)){
+                System.out.println("Costo: \u001B[31m"+v_Registro.m_getGn()+"\u001B[30m");
+            }
+        }
+    }
+    
+    private String m_imprimeCaminoA(String p_Destino){
+        c_eliminados v_Eliminado = new c_eliminados();
+        String v_Camino="";
+        c_tabla v_regAbierto;
+        c_tabla v_regCerrado;
+        for (int i = 0; i < a_Abierto.size(); i++) {
+            v_regAbierto=(c_tabla) a_Abierto.get(i);
+            if(v_regAbierto.m_getN().equals(p_Destino)){
+                if(v_regAbierto.m_getPadre()!=null){
+                    v_Camino=m_imprimeCaminoA(v_regAbierto.m_getPadre());
+                    v_Camino=v_Camino+" ⇒ \u001B[34m"+v_Eliminado.m_buscaNodo(v_regAbierto.m_getN())+"\u001B[30m";
+                }else{
+                    v_Camino="\u001B[34m"+v_regAbierto.m_getN()+"\u001B[30m";
+                }
+            }
+        }
+        for (int i = 0; i < a_Cerrado.size(); i++) {
+            v_regCerrado=(c_tabla) a_Cerrado.get(i);
+            if(v_regCerrado.m_getN().equals(p_Destino)){
+                if(v_regCerrado.m_getPadre()!=null){
+                    v_Camino=m_imprimeCaminoA(v_regCerrado.m_getPadre());
+                    v_Camino=v_Camino+" ⇒ \u001B[34m"+v_Eliminado.m_buscaNodo(v_regCerrado.m_getN())+"\u001B[30m";
+                }else{
+                    v_Camino="\u001B[34m"+v_regCerrado.m_getN()+"\u001B[30m";
+                }
+            }
+        }
+        return v_Camino;
     }
     
     private void m_fillGrafo(){
