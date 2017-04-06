@@ -492,7 +492,6 @@ public class c_busqCiegas {
         }catch(Exception e){
             System.out.println(e.toString());
         }
-        System.out.println("");
     }// Fin del método m_GrafoO
     
     /**
@@ -612,11 +611,6 @@ public class c_busqCiegas {
                         }
                     }
                 }while(a_Abierto.m_getRaiz()!=null);    
-            }else{
-                if(!v_bdOrigen)
-                    System.out.println("\u001B[31mError: No existe el origen\u001B[30m");
-                if(!v_bdDestino)
-                    System.out.println("\u001B[31mError: No existe el destino\u001B[30m");
             }
         }catch(Exception e){
             System.out.println(e.toString());

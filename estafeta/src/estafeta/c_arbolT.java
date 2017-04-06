@@ -74,8 +74,8 @@ public class c_arbolT {
             
     public void m_imprimeCosto(){
         c_nodoT v_Raiz=a_Raiz;
-        System.out.println("\nCosto_1: "+m_imprimeCosto1(v_Raiz));
-        System.out.println("Costo_2: "+m_imprimeCosto2(v_Raiz));
+        System.out.println("\nCosto_1: \u001B[34m"+m_imprimeCosto1(v_Raiz)+"\u001B[30m");
+        System.out.println("Costo_2: \u001B[34m"+m_imprimeCosto2(v_Raiz)+"\u001B[30m");
     }
     
     private float m_imprimeCosto1(c_nodoT p_Raiz){

@@ -1,8 +1,5 @@
 package estafeta;
 
-import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -245,7 +242,7 @@ public class c_principal {
                 break;
             }
             case 2:{
-                
+                o_busqInformada.m_busquedaAEstrella(v_Costo);
                 break;
             }
         }
