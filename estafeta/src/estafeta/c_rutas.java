@@ -48,10 +48,10 @@ public class c_rutas {
                     v_Destino=new StringBuffer(a_Destino);
                     v_Destino.setLength(17);
                     
-                    System.out.print("Costo_1: ");
+                    System.out.print("Distancia: ");
                     a_Costo1=v_Entrada.nextFloat();
                     
-                    System.out.print("Costo_2: ");
+                    System.out.print("Tiempo: ");
                     a_Costo2=v_Entrada.nextFloat();
                     
                     v_Maestro.writeInt(a_Llave);
@@ -91,8 +91,8 @@ public class c_rutas {
         System.out.print("No.\t");
         System.out.print("Origen\t");
         System.out.print("Destino\t");
-        System.out.print("Costo_1\t");
-        System.out.println("Costo_2");
+        System.out.print("Distancia\t");
+        System.out.println("Tiempo");
         try{
             v_Maestro = new RandomAccessFile("src/files/maestro.dat","r");
             v_apActual=v_Maestro.getFilePointer();
@@ -190,8 +190,8 @@ public class c_rutas {
                         System.out.print("\nNo.\t");
                         System.out.print("Origen\t");
                         System.out.print("Destino\t");
-                        System.out.print("Costo_1\t");
-                        System.out.println("Costo_2");
+                        System.out.print("Distancia\t");
+                        System.out.println("Tiempo");
                         
                         a_Llave=v_Maestro.readInt();
                         
@@ -271,10 +271,10 @@ public class c_rutas {
                         v_Destino=new StringBuffer(a_Destino);
                         v_Destino.setLength(17);
                         
-                        System.out.print("Costo_1: ");
+                        System.out.print("Distancia: ");
                         a_Costo1=v_Entrada.nextFloat();
                         
-                        System.out.print("Costo_2: ");
+                        System.out.print("Tiempo: ");
                         a_Costo2=v_Entrada.nextFloat();
 
                         v_Maestro.writeChars(v_Origen.toString());
@@ -425,7 +425,7 @@ public class c_rutas {
                         }
                         System.out.println("\n\u001B[31mNodo ["+v_nodoBuffer+"] eliminado\u001B[30m");
                     }else{
-                        System.out.println("\n\u001B[31mNodo ["+v_nodoBuffer+"] no existe5\u001B[30m");
+                        System.out.println("\n\u001B[31mNodo ["+v_nodoBuffer+"] no existe\u001B[30m");
                     }
                     System.out.println("\n\u001B[31m¿Desea eliminar otro nodo?\u001B[30m");
                     System.out.println("\u001B[34m[Si]\u001B[30m=1\n\u001B[34m[No]\u001B[30m=Cualquier tecla");

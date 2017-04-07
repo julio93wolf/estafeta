@@ -189,8 +189,8 @@ public class c_principal {
             try{
                 v_Entrada=new Scanner(System.in);
                 System.out.println("\n");
-                System.out.println("\u001B[34m[1]\u001B[30m Menor Costo_1");
-                System.out.println("\u001B[34m[2]\u001B[30m Menor Costo_2");
+                System.out.println("\u001B[34m[1]\u001B[30m Menor Distancia");
+                System.out.println("\u001B[34m[2]\u001B[30m Menor Tiempo");
                 System.out.print("Opción: ");
                 v_Opcion=v_Entrada.nextInt();
                 if(v_Opcion>0&&v_Opcion<3){
@@ -233,7 +233,7 @@ public class c_principal {
                 v_Entrada=new Scanner(System.in);
                 System.out.println("\n");
                 System.out.println("\u001B[34m[1]\u001B[30m Mejor camino");
-                System.out.println("\u001B[34m[2]\u001B[30m Mejor camino con menor procesos");
+                System.out.println("\u001B[34m[2]\u001B[30m Mejor camino optimizado");
                 System.out.print("Opción: ");
                 v_Opcion=v_Entrada.nextInt();
                 if(v_Opcion>0&&v_Opcion<3){
@@ -256,8 +256,8 @@ public class c_principal {
             try{
                 v_Entrada=new Scanner(System.in);
                 System.out.println("\n");
-                System.out.println("\u001B[34m[1]\u001B[30m Menor Costo_1");
-                System.out.println("\u001B[34m[2]\u001B[30m Menor Costo_2");
+                System.out.println("\u001B[34m[1]\u001B[30m Menor Distancia");
+                System.out.println("\u001B[34m[2]\u001B[30m Menor Tiempo");
                 System.out.print("Opción: ");
                 v_Opcion=v_Entrada.nextInt();
                 if(v_Opcion>0&&v_Opcion<3){
