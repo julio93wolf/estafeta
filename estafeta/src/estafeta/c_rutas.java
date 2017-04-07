@@ -131,7 +131,7 @@ public class c_rutas {
             System.out.println("\u001B[31mError: No se pudo abrir el archivo\u001B[30m");
         }
     }// Fin del método m_leeSecuencial
-    
+        
     /**
      * @name: m_Arbol
      * @description: Método para ingresar los registros del archivo indice en un arbo 
